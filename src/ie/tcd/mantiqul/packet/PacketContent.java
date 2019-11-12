@@ -12,14 +12,6 @@ import java.io.ObjectOutputStream;
  */
 public abstract class PacketContent {
 
-  public static final int ACK_PACKET = 10;
-  public static final int STRING_PACKET = 101;
-  public static final int WORKER_INFO = 103;
-  public static final int AVAILABILITY = 104;
-  public static final int WORK_INFO = 105;
-  public static final int WORK_RESULT = 106;
-  public static final int WORK_CANCEL = 107;
-
   public int type = 0;
   public int size;
 
