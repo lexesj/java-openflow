@@ -5,8 +5,8 @@ import java.net.SocketException;
 
 public class Router extends Node {
 
-  Router(int recPort) throws SocketException {
-    super(recPort);
+  Router(int listeningPort) throws SocketException {
+    super(listeningPort);
   }
 
   /**

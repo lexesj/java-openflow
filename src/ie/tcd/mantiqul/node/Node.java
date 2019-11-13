@@ -19,12 +19,12 @@ public abstract class Node {
   protected Listener listener;
   protected CountDownLatch latch;
 
-  Node(int recPort) throws SocketException {
+  Node(int listeningPort) throws SocketException {
     latch = new CountDownLatch(1);
     listener = new SimpleListener();
     listener.setDaemon(true);
     listener.start();
-    socket = new DatagramSocket(recPort);
+    socket = new DatagramSocket(listeningPort);
     listener.go();
   }
 
