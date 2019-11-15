@@ -13,7 +13,8 @@ import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 public abstract class Node {
-  public static final int PACKETSIZE = 65536;
+  public static final int PACKET_SIZE = 65536;
+  public static final int DEFAULT_PORT = 50000;
 
   protected DatagramSocket socket;
   protected Listener listener;
@@ -75,7 +76,7 @@ public abstract class Node {
         latch.await();
         // Endless loop: attempt to receive packet, notify receivers, etc
         while (true) {
-          DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE);
+          DatagramPacket packet = new DatagramPacket(new byte[PACKET_SIZE], PACKET_SIZE);
           socket.receive(packet);
           onReceipt(packet);
         }

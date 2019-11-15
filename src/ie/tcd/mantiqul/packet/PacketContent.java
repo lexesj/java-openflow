@@ -12,6 +12,8 @@ import java.io.ObjectOutputStream;
  */
 public abstract class PacketContent {
 
+  public static final int HELLO_PACKET = 100;
+
   public int type = 0;
   public int size;
 
@@ -37,6 +39,9 @@ public abstract class PacketContent {
       type = oin.readInt(); // read type from beginning of packet
 
       switch (type) { // depending on type create content object
+        case HELLO_PACKET:
+          content = new HelloPacketContent();
+          break;
       }
       if (content != null)
         content.size = data.length;
