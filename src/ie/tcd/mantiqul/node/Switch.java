@@ -38,6 +38,11 @@ public class Switch extends Node {
   public void onReceipt(DatagramPacket packet) {
     PacketContent packetContent = PacketContent.fromDatagramPacket(packet);
     switch (packetContent.type) {
+      case PacketContent.HELLO_PACKET:
+        HelloPacketContent helloPacketContent = (HelloPacketContent) packetContent;
+        double receivedVersionNumber = helloPacketContent.getVersionNumber();
+        if (receivedVersionNumber < versionNumber) versionNumber = receivedVersionNumber;
+        break;
       case PacketContent.PAYLOAD_PACKET:
         PayloadPacketContent payloadPacketContent = (PayloadPacketContent) packetContent;
         String payloadDestination = payloadPacketContent.getDestination();
@@ -62,6 +67,7 @@ public class Switch extends Node {
       default:
         terminal.println("Unknown packet received");
     }
+    terminal.println(packetContent.toString());
   }
 
   /** Initialises the router */

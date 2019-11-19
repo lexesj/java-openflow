@@ -38,6 +38,7 @@ public class EndNode extends Node{
       default:
         terminal.println("Unknown packet received");
     }
+    terminal.println(packetContent.toString());
   }
 
   public static void main(String[] args) throws SocketException {
