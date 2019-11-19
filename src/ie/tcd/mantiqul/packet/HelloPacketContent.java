@@ -19,7 +19,7 @@ public class HelloPacketContent extends PacketContent {
   }
 
   /**
-   * Constructs an ack packet out of a datagram packet.
+   * Constructs an hello packet out of a datagram packet.
    *
    * @param oin The received packet as an object input stream
    */

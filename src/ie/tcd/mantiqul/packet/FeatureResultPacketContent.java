@@ -27,7 +27,7 @@ public class FeatureResultPacketContent extends PacketContent {
   }
 
   /**
-   * Constructs an feature request packet out of a datagram packet.
+   * Constructs an feature result packet out of a datagram packet.
    *
    * @param oin The received packet as an object input stream
    */
