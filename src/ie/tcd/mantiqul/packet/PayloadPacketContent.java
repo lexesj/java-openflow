@@ -6,11 +6,18 @@ import java.io.ObjectOutputStream;
 public class PayloadPacketContent extends PacketContent {
 
   private String payload;
+  private String destination;
 
-  /** @param payload the payload to be sent */
-  public PayloadPacketContent(String payload) {
+  /**
+   * Constructor which takes in the payload and destination
+   *
+   * @param payload the payload to be sent
+   * @param destination the destination of the payload
+   */
+  public PayloadPacketContent(String payload, String destination) {
     type = PAYLOAD_PACKET;
     this.payload = payload;
+    this.destination = destination;
   }
 
   /**
@@ -22,6 +29,7 @@ public class PayloadPacketContent extends PacketContent {
     try {
       type = PAYLOAD_PACKET;
       payload = oin.readUTF();
+      destination = oin.readUTF();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -35,6 +43,7 @@ public class PayloadPacketContent extends PacketContent {
   protected void toObjectOutputStream(ObjectOutputStream oout) {
     try {
       oout.writeUTF(payload);
+      oout.writeUTF(destination);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -46,7 +55,7 @@ public class PayloadPacketContent extends PacketContent {
    * @return Returns the content of the packet as String.
    */
   public String toString() {
-    return "PAYLOAD_PACKET payload: " + payload;
+    return "PAYLOAD_PACKET payload: " + payload + ", destination: " + destination;
   }
 
   /**
@@ -56,5 +65,14 @@ public class PayloadPacketContent extends PacketContent {
    */
   public String getPayload() {
     return payload;
+  }
+
+  /**
+   * Returns the destination
+   *
+   * @return the destination
+   */
+  public String getDestination() {
+    return destination;
   }
 }
