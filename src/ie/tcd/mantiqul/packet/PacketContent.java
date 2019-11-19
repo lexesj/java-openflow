@@ -14,7 +14,7 @@ public abstract class PacketContent {
 
   public static final int HELLO_PACKET = 100;
   public static final int FEATURE_REQUEST = 105;
-  public static final int FEATURE_REPLY = 106;
+  public static final int FEATURE_RESULT = 106;
 
   public int type = 0;
   public int size;
@@ -42,7 +42,13 @@ public abstract class PacketContent {
 
       switch (type) { // depending on type create content object
         case HELLO_PACKET:
-          content = new HelloPacketContent();
+          content = new HelloPacketContent(oin);
+          break;
+        case FEATURE_REQUEST:
+          content = new FeatureRequestPacketContent(oin);
+          break;
+        case FEATURE_RESULT:
+          content = new FeatureResultPacketContent(oin);
           break;
       }
       if (content != null)

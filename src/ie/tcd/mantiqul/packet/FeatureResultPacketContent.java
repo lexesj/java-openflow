@@ -1,7 +1,10 @@
 package ie.tcd.mantiqul.packet;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for packet content that represents feature request packets
@@ -9,12 +12,16 @@ import java.io.ObjectOutputStream;
 public class FeatureResultPacketContent extends PacketContent {
   int num_buffers;
   int num_tables;
+  List<String> connections;
 
   /**
    * Constructor which sets the packet type.
    */
-  public FeatureResultPacketContent() {
-    type = FEATURE_REQUEST;
+  public FeatureResultPacketContent(int num_buffers, int num_tables, List<String> connections) {
+    type = FEATURE_RESULT;
+    this.num_buffers = num_buffers;
+    this.num_tables = num_tables;
+    this.connections = connections;
   }
 
   /**
@@ -24,7 +31,14 @@ public class FeatureResultPacketContent extends PacketContent {
    */
   protected FeatureResultPacketContent(ObjectInputStream oin) {
     try {
-      type = FEATURE_REQUEST;
+      type = FEATURE_RESULT;
+      num_buffers = oin.readInt();
+      num_tables = oin.readInt();
+      int num_connections = oin.readInt();
+      connections = new ArrayList<>();
+      for (int i = 0; i < num_connections; i++) {
+        connections.add(oin.readUTF());
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -36,6 +50,16 @@ public class FeatureResultPacketContent extends PacketContent {
    * @param oout The object output stream to write to
    */
   protected void toObjectOutputStream(ObjectOutputStream oout) {
+    try {
+      oout.writeInt(num_buffers);
+      oout.writeInt(num_tables);
+      oout.writeInt(connections.size());
+      for (String connection : connections) {
+        oout.writeUTF(connection);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -44,6 +68,11 @@ public class FeatureResultPacketContent extends PacketContent {
    * @return Returns the content of the packet as String.
    */
   public String toString() {
-    return "FEATURE_RESULT: ";
+    StringBuilder result = new StringBuilder(
+        "FEATURE_RESULT:\nQueue Max: " + num_buffers + "\nNum Tables: " + num_tables
+            + "\nConnections: ");
+    for (String connection : connections)
+      result.append(connection).append("\n");
+    return result.toString();
   }
 }

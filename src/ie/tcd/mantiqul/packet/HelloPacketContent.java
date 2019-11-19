@@ -13,9 +13,9 @@ public class HelloPacketContent extends PacketContent {
   /**
    * Constructor that takes in information about an acknowledgement.
    */
-  public HelloPacketContent() {
+  public HelloPacketContent(double versionNumber) {
     type = HELLO_PACKET;
-    versionNumber = 1.0;
+    this.versionNumber = versionNumber;
   }
 
   /**
