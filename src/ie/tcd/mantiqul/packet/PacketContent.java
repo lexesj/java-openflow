@@ -13,6 +13,8 @@ import java.io.ObjectOutputStream;
 public abstract class PacketContent {
 
   public static final int HELLO_PACKET = 100;
+  public static final int FEATURE_REQUEST = 105;
+  public static final int FEATURE_REPLY = 106;
 
   public int type = 0;
   public int size;
