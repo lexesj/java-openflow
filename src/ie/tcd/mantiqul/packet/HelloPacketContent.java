@@ -3,15 +3,15 @@ package ie.tcd.mantiqul.packet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * Class for packet content that represents hello packets
- */
+/** Class for packet content that represents hello packets */
 public class HelloPacketContent extends PacketContent {
 
   private double versionNumber;
 
   /**
    * Constructor that takes in information about an acknowledgement.
+   *
+   * @param versionNumber the openflow version
    */
   public HelloPacketContent(double versionNumber) {
     type = HELLO_PACKET;

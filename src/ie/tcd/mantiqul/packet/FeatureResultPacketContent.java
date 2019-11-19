@@ -6,9 +6,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class for packet content that represents feature request packets
- */
+/** Class for packet content that represents feature request packets */
 public class FeatureResultPacketContent extends PacketContent {
   int num_buffers;
   int num_tables;
@@ -16,6 +14,10 @@ public class FeatureResultPacketContent extends PacketContent {
 
   /**
    * Constructor which sets the packet type.
+   *
+   * @param num_buffers the max number of packets the router can queue
+   * @param num_tables the number of tables a router has
+   * @param connections ip addresses of the router's connections
    */
   public FeatureResultPacketContent(int num_buffers, int num_tables, List<String> connections) {
     type = FEATURE_RESULT;
@@ -68,11 +70,14 @@ public class FeatureResultPacketContent extends PacketContent {
    * @return Returns the content of the packet as String.
    */
   public String toString() {
-    StringBuilder result = new StringBuilder(
-        "FEATURE_RESULT:\nQueue Max: " + num_buffers + "\nNum Tables: " + num_tables
-            + "\nConnections: ");
-    for (String connection : connections)
-      result.append(connection).append("\n");
+    StringBuilder result =
+        new StringBuilder(
+            "FEATURE_RESULT:\nQueue Max: "
+                + num_buffers
+                + "\nNum Tables: "
+                + num_tables
+                + "\nConnections: ");
+    for (String connection : connections) result.append(connection).append("\n");
     return result.toString();
   }
 }

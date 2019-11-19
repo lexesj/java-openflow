@@ -3,14 +3,10 @@ package ie.tcd.mantiqul.packet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * Class for packet content that represents feature request packets
- */
+/** Class for packet content that represents feature request packets */
 public class FeatureRequestPacketContent extends PacketContent {
 
-  /**
-   * Constructor which sets the packet type.
-   */
+  /** Constructor which sets the packet type. */
   public FeatureRequestPacketContent() {
     type = FEATURE_REQUEST;
   }
@@ -33,8 +29,7 @@ public class FeatureRequestPacketContent extends PacketContent {
    *
    * @param oout The object output stream to write to
    */
-  protected void toObjectOutputStream(ObjectOutputStream oout) {
-  }
+  protected void toObjectOutputStream(ObjectOutputStream oout) {}
 
   /**
    * Returns the content of the packet as String.
