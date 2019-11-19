@@ -9,11 +9,12 @@ import java.net.SocketException;
 public class Controller extends Node {
 
   Terminal terminal;
-  double versionNumber = 1.0;
+  double versionNumber;
 
   Controller(int listeningPort) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
+    versionNumber = 1.0;
   }
 
   /**

@@ -14,10 +14,12 @@ public class Switch extends Node {
   public final String CONTROLLER = "controller";
 
   Terminal terminal;
+  double versionNumber;
 
   Switch(int listeningPort) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
+    versionNumber = 1.0;
   }
 
   /**
@@ -37,7 +39,7 @@ public class Switch extends Node {
    */
   public void start() {
     try {
-      send(new HelloPacketContent(),
+      send(new HelloPacketContent(versionNumber),
           new InetSocketAddress(InetAddress.getByName(CONTROLLER), DEFAULT_PORT));
     } catch (UnknownHostException e) {
       e.printStackTrace();
