@@ -17,6 +17,7 @@ public class Controller extends Node {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
     versionNumber = 1.0;
+    terminal.println(this.toString());
   }
 
   /**
@@ -42,7 +43,9 @@ public class Controller extends Node {
       default:
         terminal.println("Unknown packet received");
     }
+    terminal.println("---------------------------------------------------------------------------");
     terminal.println(packetContent.toString());
+    terminal.println("---------------------------------------------------------------------------");
   }
 
   public static void main(String[] args) throws SocketException {

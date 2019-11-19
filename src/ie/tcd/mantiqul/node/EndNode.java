@@ -4,9 +4,10 @@ import ie.tcd.mantiqul.Terminal;
 import ie.tcd.mantiqul.packet.PacketContent;
 import ie.tcd.mantiqul.packet.PayloadPacketContent;
 import java.net.DatagramPacket;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 
-public class EndNode extends Node{
+public class EndNode extends Node {
   private static final String PREFIX = "> ";
   private final String DEFAULT_ROUTER;
 
@@ -19,8 +20,13 @@ public class EndNode extends Node{
   }
 
   public void start() {
+    terminal.println(this.toString());
     while (true) {
       String commandString = terminal.read(PREFIX);
+      String destination = terminal.read(PREFIX);
+      send(
+          new PayloadPacketContent(commandString, destination),
+          new InetSocketAddress(DEFAULT_ROUTER, DEFAULT_PORT));
     }
   }
 
@@ -40,7 +46,9 @@ public class EndNode extends Node{
       default:
         terminal.println("Unknown packet received");
     }
+    terminal.println("---------------------------------------------------------------------------");
     terminal.println(packetContent.toString());
+    terminal.println("---------------------------------------------------------------------------");
   }
 
   public static void main(String[] args) throws SocketException {

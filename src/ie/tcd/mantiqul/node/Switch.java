@@ -68,17 +68,20 @@ public class Switch extends Node {
       default:
         terminal.println("Unknown packet received");
     }
+    terminal.println("---------------------------------------------------------------------------");
     terminal.println(packetContent.toString());
+    terminal.println("---------------------------------------------------------------------------");
   }
 
   /** Initialises the router */
   public void start() {
+    terminal.println(this.toString());
     send(new HelloPacketContent(versionNumber), new InetSocketAddress(CONTROLLER, DEFAULT_PORT));
   }
 
   public static void main(String[] args) throws SocketException {
     if (args.length < 1) {
-      System.out.println("Usage: java ie.tcd.mantiqul.Switch <connection1> .. <connectionN>");
+      System.out.println("Usage: java ie.tcd.mantiqul.Switch <connection 1> ... <connection N>");
       return;
     }
     (new Switch(DEFAULT_PORT, Arrays.asList(args))).start();

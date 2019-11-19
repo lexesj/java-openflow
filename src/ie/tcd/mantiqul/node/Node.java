@@ -40,7 +40,7 @@ public abstract class Node {
       DatagramPacket packet = packetContent.toDatagramPacket();
       setDestination(packet, dstAddress, port);
       socket.send(packet);
-    } catch(IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

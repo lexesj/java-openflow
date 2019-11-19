@@ -14,10 +14,16 @@ sudo docker network create --subnet 172.0.20.0/16 $NETWORK_NAME
 # allow controller to initialise
 sleep 1
 
-for i in `seq 1 $1`;
+NUM_PORTS=$(($1 - 1))
+
+for i in `seq 0 $NUM_PORTS`;
 do
-  ./switch.sh $i &
+  if [ $i -ne $NUM_PORTS ]; then
+    ./switch.sh $i switch$(($i + 1)) &
+  else
+    ./switch.sh $i endpoint2 &
+  fi
 done
 
-./end_point.sh 1 &
-./end_point.sh 2 &
+./end_point.sh 0 switch0 &
+./end_point.sh 1 switch$NUM_PORTS &
