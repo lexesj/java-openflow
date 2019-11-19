@@ -12,7 +12,7 @@ public class Controller extends Node {
 
   Controller(int listeningPort) throws SocketException {
     super(listeningPort);
-    terminal = new Terminal(getClass().getName());
+    terminal = new Terminal(getClass().getSimpleName());
   }
 
   /**

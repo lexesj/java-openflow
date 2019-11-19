@@ -17,7 +17,7 @@ public class Router extends Node {
 
   Router(int listeningPort) throws SocketException {
     super(listeningPort);
-    terminal = new Terminal(getClass().getName());
+    terminal = new Terminal(getClass().getSimpleName());
   }
 
   /**
@@ -29,9 +29,6 @@ public class Router extends Node {
   public void onReceipt(DatagramPacket packet) {
     PacketContent packetContent = PacketContent.fromDatagramPacket(packet);
     switch (packetContent.type) {
-      case PacketContent.HELLO_PACKET:
-        System.out.println("hello");
-        break;
     }
   }
 
