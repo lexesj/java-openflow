@@ -9,13 +9,13 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Router extends Node {
+public class Switch extends Node {
 
   public final String CONTROLLER = "controller";
 
   Terminal terminal;
 
-  Router(int listeningPort) throws SocketException {
+  Switch(int listeningPort) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
   }
@@ -45,6 +45,6 @@ public class Router extends Node {
   }
 
   public static void main(String[] args) throws SocketException {
-    (new Router(DEFAULT_PORT)).start();
+    (new Switch(DEFAULT_PORT)).start();
   }
 }
