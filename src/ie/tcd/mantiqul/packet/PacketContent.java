@@ -14,6 +14,7 @@ public abstract class PacketContent {
 
   public static final int HELLO_PACKET = 100;
   public static final int PAYLOAD_PACKET = 101;
+  public static final int PACKET_IN_PACKET = 101;
   public static final int FEATURE_REQUEST = 105;
   public static final int FEATURE_RESULT = 106;
 
