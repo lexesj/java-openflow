@@ -14,7 +14,7 @@ public abstract class PacketContent {
 
   public static final int HELLO_PACKET = 100;
   public static final int PAYLOAD_PACKET = 101;
-  public static final int PACKET_IN_PACKET = 101;
+  public static final int PACKET_IN_PACKET = 102;
   public static final int FEATURE_REQUEST = 105;
   public static final int FEATURE_RESULT = 106;
 
@@ -54,6 +54,9 @@ public abstract class PacketContent {
           break;
         case PAYLOAD_PACKET:
           content = new PayloadPacketContent(oin);
+          break;
+        case PACKET_IN_PACKET:
+          content = new PacketInPacketContent(oin);
           break;
       }
       if (content != null)
