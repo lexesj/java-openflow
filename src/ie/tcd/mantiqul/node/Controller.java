@@ -1,6 +1,8 @@
 package ie.tcd.mantiqul.node;
 
 import ie.tcd.mantiqul.Terminal;
+import ie.tcd.mantiqul.packet.FeatureRequestPacketContent;
+import ie.tcd.mantiqul.packet.FeatureResultPacketContent;
 import ie.tcd.mantiqul.packet.HelloPacketContent;
 import ie.tcd.mantiqul.packet.PacketContent;
 import java.net.DatagramPacket;
@@ -8,8 +10,8 @@ import java.net.SocketException;
 
 public class Controller extends Node {
 
-  Terminal terminal;
-  double versionNumber;
+  private Terminal terminal;
+  private double versionNumber;
 
   Controller(int listeningPort) throws SocketException {
     super(listeningPort);
@@ -31,7 +33,14 @@ public class Controller extends Node {
         double receivedVersionNumber = helloPacketContent.getVersionNumber();
         if (receivedVersionNumber < versionNumber) versionNumber = receivedVersionNumber;
         send(new HelloPacketContent(versionNumber), packet.getAddress(), packet.getPort());
+        send(new FeatureRequestPacketContent(), packet.getAddress(), packet.getPort());
         break;
+      case PacketContent.FEATURE_RESULT:
+        FeatureResultPacketContent featureResultPacketContent =
+            (FeatureResultPacketContent) packetContent;
+        break;
+      default:
+        terminal.println("Unknown packet received");
     }
   }
 
