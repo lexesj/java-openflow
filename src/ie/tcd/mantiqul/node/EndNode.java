@@ -8,12 +8,14 @@ import java.net.SocketException;
 
 public class EndNode extends Node{
   private static final String PREFIX = "> ";
+  private final String DEFAULT_ROUTER;
 
   private Terminal terminal;
 
-  EndNode(int listeningPort) throws SocketException {
+  EndNode(int listeningPort, String defaultRouter) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
+    DEFAULT_ROUTER = defaultRouter;
   }
 
   public void start() {
@@ -42,6 +44,10 @@ public class EndNode extends Node{
   }
 
   public static void main(String[] args) throws SocketException {
-    (new EndNode(DEFAULT_PORT)).start();
+    if (args.length < 1) {
+      System.out.println("Usage: java ie.tcd.mantiqul.EndNode <default router>");
+      return;
+    }
+    (new EndNode(DEFAULT_PORT, args[0])).start();
   }
 }

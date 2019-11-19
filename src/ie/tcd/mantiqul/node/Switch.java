@@ -9,7 +9,7 @@ import ie.tcd.mantiqul.packet.PayloadPacketContent;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +21,14 @@ public class Switch extends Node {
   private Terminal terminal;
   private double versionNumber;
   private Map<String, String> flowtable;
+  private List<String> connections;
 
-  Switch(int listeningPort) throws SocketException {
+  Switch(int listeningPort, List<String> connections) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
     versionNumber = 1.0;
     flowtable = new Hashtable<>();
+    this.connections = connections;
   }
 
   /**
@@ -59,7 +61,6 @@ public class Switch extends Node {
       case PacketContent.FEATURE_REQUEST:
         int num_buffers = 11;
         int num_tables = 1;
-        List<String> connections = new ArrayList<>();
         FeatureResultPacketContent specifications =
             new FeatureResultPacketContent(num_buffers, num_tables, connections);
         send(specifications, packet.getAddress(), packet.getPort());
@@ -76,6 +77,10 @@ public class Switch extends Node {
   }
 
   public static void main(String[] args) throws SocketException {
-    (new Switch(DEFAULT_PORT)).start();
+    if (args.length < 1) {
+      System.out.println("Usage: java ie.tcd.mantiqul.Switch <connection1> .. <connectionN>");
+      return;
+    }
+    (new Switch(DEFAULT_PORT, Arrays.asList(args))).start();
   }
 }
