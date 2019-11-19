@@ -13,5 +13,5 @@ sudo docker network create --subnet 172.0.20.0/16 $NETWORK_NAME
 
 for i in `seq 1 $1`;
 do
-  ./router.sh $i &
+  ./switch.sh $i &
 done
