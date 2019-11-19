@@ -18,3 +18,6 @@ for i in `seq 1 $1`;
 do
   ./switch.sh $i &
 done
+
+./end_point.sh 1 &
+./end_point.sh 2 &
