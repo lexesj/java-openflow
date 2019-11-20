@@ -25,5 +25,5 @@ do
   fi
 done
 
-./end_point.sh 0 switch0 &
-./end_point.sh 1 switch$NUM_PORTS &
+./endpoint.sh 0 switch0 &
+./endpoint.sh 1 switch$NUM_PORTS &
