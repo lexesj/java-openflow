@@ -41,14 +41,14 @@ public class EndNode extends Node {
     switch (packetContent.type) {
       case PacketContent.PAYLOAD_PACKET:
         PayloadPacketContent payloadPacketContent = (PayloadPacketContent) packetContent;
-        terminal.println(payloadPacketContent.toString());
+        terminal.println(payloadPacketContent.getPayload());
         break;
       default:
         terminal.println("Unknown packet received");
     }
-    terminal.println("---------------------------------------------------------------------------");
-    terminal.println(packetContent.toString());
-    terminal.println("---------------------------------------------------------------------------");
+//    terminal.println("---------------------------------------------------------------------------");
+//    terminal.println(packetContent.toString());
+//    terminal.println("---------------------------------------------------------------------------");
   }
 
   public static void main(String[] args) throws SocketException {

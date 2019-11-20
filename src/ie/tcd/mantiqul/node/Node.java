@@ -78,7 +78,8 @@ public abstract class Node {
         while (true) {
           DatagramPacket packet = new DatagramPacket(new byte[PACKET_SIZE], PACKET_SIZE);
           socket.receive(packet);
-          onReceipt(packet);
+          Thread receive = new Thread(() -> onReceipt(packet));
+          receive.start();
         }
       } catch (Exception e) {
         if (!(e instanceof SocketException)) e.printStackTrace();
