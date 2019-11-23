@@ -26,13 +26,15 @@ public class Switch extends Node {
 
   private Terminal terminal;
   private double versionNumber;
+  private String name;
   private Map<String, String> flowTable;
   private List<String> connections;
   private BlockingQueue<PayloadPacketContent> packetBuffer;
 
-  Switch(int listeningPort, List<String> connections) throws SocketException {
+  Switch(int listeningPort, String name, List<String> connections) throws SocketException {
     super(listeningPort);
-    terminal = new Terminal(getClass().getSimpleName());
+    terminal = new Terminal(name);
+    this.name = name;
     versionNumber = 1.0;
     flowTable = new ConcurrentHashMap<>();
     this.connections = connections;
@@ -64,7 +66,7 @@ public class Switch extends Node {
         int num_buffers = 11;
         int num_tables = 1;
         FeatureResultPacketContent specifications =
-            new FeatureResultPacketContent(num_buffers, num_tables, connections);
+            new FeatureResultPacketContent(num_buffers, num_tables, name, connections);
         send(specifications, packet.getAddress(), packet.getPort());
         break;
       case PacketContent.FLOW_MOD_PACKET:
@@ -99,6 +101,7 @@ public class Switch extends Node {
     try {
       while (true) {
         PayloadPacketContent toForward = packetBuffer.take();
+        toForward.setSwitchName(name);
         String payloadDestination = toForward.getDestination();
         boolean tableMiss = !flowTable.containsKey(payloadDestination);
         if (tableMiss) {
@@ -118,10 +121,11 @@ public class Switch extends Node {
   }
 
   public static void main(String[] args) throws SocketException {
-    if (args.length < 1) {
-      System.out.println("Usage: java ie.tcd.mantiqul.Switch <connection 1> ... <connection N>");
+    if (args.length < 2) {
+      System.out
+          .println("Usage: java ie.tcd.mantiqul.Switch <name> <connection 1> ... <connection N>");
       return;
     }
-    (new Switch(DEFAULT_PORT, Arrays.asList(args))).initialise();
+    (new Switch(DEFAULT_PORT, args[0], Arrays.asList(args).subList(1, args.length))).initialise();
   }
 }

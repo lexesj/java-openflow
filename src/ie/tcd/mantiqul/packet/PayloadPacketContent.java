@@ -6,17 +6,20 @@ import java.io.ObjectOutputStream;
 public class PayloadPacketContent extends PacketContent {
 
   private String payload;
+  private String switchName;
   private String destination;
 
   /**
    * Constructor which takes in the payload and destination
    *
    * @param payload the payload to be sent
+   * @param switchName the name of the switch the payload was sent from
    * @param destination the destination of the payload
    */
-  public PayloadPacketContent(String payload, String destination) {
+  public PayloadPacketContent(String payload, String switchName, String destination) {
     type = PAYLOAD_PACKET;
     this.payload = payload;
+    this.switchName = switchName;
     this.destination = destination;
   }
 
@@ -29,6 +32,7 @@ public class PayloadPacketContent extends PacketContent {
     try {
       type = PAYLOAD_PACKET;
       payload = oin.readUTF();
+      switchName = oin.readUTF();
       destination = oin.readUTF();
     } catch (Exception e) {
       e.printStackTrace();
@@ -43,6 +47,7 @@ public class PayloadPacketContent extends PacketContent {
   protected void toObjectOutputStream(ObjectOutputStream oout) {
     try {
       oout.writeUTF(payload);
+      oout.writeUTF(switchName);
       oout.writeUTF(destination);
     } catch (Exception e) {
       e.printStackTrace();
@@ -55,7 +60,7 @@ public class PayloadPacketContent extends PacketContent {
    * @return Returns the content of the packet as String.
    */
   public String toString() {
-    return "PAYLOAD_PACKET payload: " + payload + ", destination: " + destination;
+    return "PAYLOAD_PACKET payload: " + payload + ", switch name: " + switchName + ", destination: " + destination;
   }
 
   /**
@@ -75,4 +80,21 @@ public class PayloadPacketContent extends PacketContent {
   public String getDestination() {
     return destination;
   }
+
+  /**
+   * Returns the switch name
+   *
+   * @return the switch name
+   */
+  public String getSwitchName() {
+    return switchName;
+  }
+
+  /**
+   * Sets the switch name
+   */
+  public void setSwitchName(String switchName) {
+    this.switchName = switchName;
+  }
+
 }

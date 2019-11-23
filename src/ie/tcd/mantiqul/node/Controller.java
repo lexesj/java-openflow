@@ -48,7 +48,8 @@ public class Controller extends Node {
       case PacketContent.PACKET_IN_PACKET:
         PacketInPacketContent packetInPacketContent = (PacketInPacketContent) packetContent;
         String destination = packetInPacketContent.getDestination();
-        String nextHop = flowTables.get(destination).get(packet.getAddress().getCanonicalHostName());
+        String switchName = packetInPacketContent.getSwitchName();
+        String nextHop = flowTables.get(destination).get(switchName);
         FlowModPacketContent flowMod = new FlowModPacketContent(nextHop, destination);
         send(flowMod, packet.getAddress(), packet.getPort());
         break;
@@ -63,15 +64,15 @@ public class Controller extends Node {
   private void initialiseFlowTables() {
     flowTables = new ConcurrentHashMap<>();
     Map<String, String> endpoint1 = new ConcurrentHashMap<>();
-    endpoint1.put("switch0.telecomms", "switch1.telecomms");
-    endpoint1.put("switch1.telecomms", "switch2.telecomms");
-    endpoint1.put("switch2.telecomms", "endpoint1.telecomms");
-    flowTables.put("endpoint1.telecomms", endpoint1);
+    endpoint1.put("switch0", "switch1");
+    endpoint1.put("switch1", "switch2");
+    endpoint1.put("switch2", "endpoint1");
+    flowTables.put("endpoint1", endpoint1);
     Map<String, String> endpoint0 = new ConcurrentHashMap<>();
-    endpoint0.put("switch2.telecomms", "switch1.telecomms");
-    endpoint0.put("switch1.telecomms", "switch0.telecomms");
-    endpoint0.put("switch0.telecomms", "endpoint0.telecomms");
-    flowTables.put("endpoint0.telecomms", endpoint0);
+    endpoint0.put("switch2", "switch1");
+    endpoint0.put("switch1", "switch0");
+    endpoint0.put("switch0", "endpoint0");
+    flowTables.put("endpoint0", endpoint0);
   }
 
   public static void main(String[] args) throws SocketException {

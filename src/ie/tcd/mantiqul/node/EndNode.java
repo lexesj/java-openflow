@@ -9,14 +9,14 @@ import java.net.SocketException;
 
 public class EndNode extends Node {
   private static final String PREFIX = "> ";
-  private final String DEFAULT_ROUTER;
+  private final String DEFAULT_SWITCH;
 
   private Terminal terminal;
 
-  EndNode(int listeningPort, String defaultRouter) throws SocketException {
+  EndNode(int listeningPort, String name, String defaultRouter) throws SocketException {
     super(listeningPort);
-    terminal = new Terminal(getClass().getSimpleName());
-    DEFAULT_ROUTER = defaultRouter;
+    terminal = new Terminal(name);
+    DEFAULT_SWITCH = defaultRouter;
   }
 
   public void start() {
@@ -25,8 +25,8 @@ public class EndNode extends Node {
       String commandString = terminal.read(PREFIX);
       String destination = terminal.read(PREFIX);
       send(
-          new PayloadPacketContent(commandString, destination),
-          new InetSocketAddress(DEFAULT_ROUTER, DEFAULT_PORT));
+          new PayloadPacketContent(commandString, DEFAULT_SWITCH, destination),
+          new InetSocketAddress(DEFAULT_SWITCH, DEFAULT_PORT));
     }
   }
 
@@ -52,10 +52,10 @@ public class EndNode extends Node {
   }
 
   public static void main(String[] args) throws SocketException {
-    if (args.length < 1) {
-      System.out.println("Usage: java ie.tcd.mantiqul.EndNode <default router>");
+    if (args.length < 2) {
+      System.out.println("Usage: java ie.tcd.mantiqul.EndNode <name> <default router>");
       return;
     }
-    (new EndNode(DEFAULT_PORT, args[0])).start();
+    (new EndNode(DEFAULT_PORT, args[0], args[1])).start();
   }
 }

@@ -4,7 +4,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class PacketInPacketContent extends PacketContent {
+
   private String destination;
+  private String switchName;
 
   /**
    * Constructor which takes in a payload packet
@@ -14,6 +16,7 @@ public class PacketInPacketContent extends PacketContent {
   public PacketInPacketContent(PayloadPacketContent payload) {
     type = PACKET_IN_PACKET;
     destination = payload.getDestination();
+    switchName = payload.getSwitchName();
   }
 
   /**
@@ -25,6 +28,7 @@ public class PacketInPacketContent extends PacketContent {
     try {
       type = PACKET_IN_PACKET;
       destination = oin.readUTF();
+      switchName = oin.readUTF();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -38,6 +42,7 @@ public class PacketInPacketContent extends PacketContent {
   protected void toObjectOutputStream(ObjectOutputStream oout) {
     try {
       oout.writeUTF(destination);
+      oout.writeUTF(switchName);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -59,5 +64,14 @@ public class PacketInPacketContent extends PacketContent {
    */
   public String getDestination() {
     return destination;
+  }
+
+  /**
+   * Returns the switch name
+   *
+   * @return the switch name
+   */
+  public String getSwitchName() {
+    return switchName;
   }
 }

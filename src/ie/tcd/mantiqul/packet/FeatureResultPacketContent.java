@@ -10,6 +10,7 @@ import java.util.List;
 public class FeatureResultPacketContent extends PacketContent {
   int num_buffers;
   int num_tables;
+  String switchName;
   List<String> connections;
 
   /**
@@ -19,10 +20,11 @@ public class FeatureResultPacketContent extends PacketContent {
    * @param num_tables the number of tables a router has
    * @param connections ip addresses of the router's connections
    */
-  public FeatureResultPacketContent(int num_buffers, int num_tables, List<String> connections) {
+  public FeatureResultPacketContent(int num_buffers, int num_tables, String switchName, List<String> connections) {
     type = FEATURE_RESULT;
     this.num_buffers = num_buffers;
     this.num_tables = num_tables;
+    this.switchName  = switchName;
     this.connections = connections;
   }
 
@@ -36,6 +38,7 @@ public class FeatureResultPacketContent extends PacketContent {
       type = FEATURE_RESULT;
       num_buffers = oin.readInt();
       num_tables = oin.readInt();
+      switchName = oin.readUTF();
       int num_connections = oin.readInt();
       connections = new ArrayList<>();
       for (int i = 0; i < num_connections; i++) {
@@ -55,6 +58,7 @@ public class FeatureResultPacketContent extends PacketContent {
     try {
       oout.writeInt(num_buffers);
       oout.writeInt(num_tables);
+      oout.writeUTF(switchName);
       oout.writeInt(connections.size());
       for (String connection : connections) {
         oout.writeUTF(connection);
@@ -76,8 +80,10 @@ public class FeatureResultPacketContent extends PacketContent {
                 + num_buffers
                 + "\nNum Tables: "
                 + num_tables
+                + "\nSwitch Name: "
+                + switchName
                 + "\nConnections: ");
-    for (String connection : connections) result.append(connection).append("\n");
+    for (String connection : connections) result.append(connection).append(" ");
     return result.toString();
   }
 }
