@@ -13,8 +13,12 @@ import java.net.SocketException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Switch extends Node {
 
@@ -24,7 +28,7 @@ public class Switch extends Node {
   private double versionNumber;
   private Map<String, String> flowTable;
   private List<String> connections;
-  private CountDownLatch latch;
+  private BlockingQueue<PayloadPacketContent> packetBuffer;
 
   Switch(int listeningPort, List<String> connections) throws SocketException {
     super(listeningPort);
@@ -32,6 +36,7 @@ public class Switch extends Node {
     versionNumber = 1.0;
     flowTable = new ConcurrentHashMap<>();
     this.connections = connections;
+    packetBuffer = new LinkedBlockingQueue<>();
     latch = new CountDownLatch(1);
   }
 
@@ -47,25 +52,13 @@ public class Switch extends Node {
       case PacketContent.HELLO_PACKET:
         HelloPacketContent helloPacketContent = (HelloPacketContent) packetContent;
         double receivedVersionNumber = helloPacketContent.getVersionNumber();
-        if (receivedVersionNumber < versionNumber) versionNumber = receivedVersionNumber;
+        if (receivedVersionNumber < versionNumber) {
+          versionNumber = receivedVersionNumber;
+        }
         break;
       case PacketContent.PAYLOAD_PACKET:
         PayloadPacketContent payloadPacketContent = (PayloadPacketContent) packetContent;
-        String payloadDestination = payloadPacketContent.getDestination();
-        boolean tableMiss = !flowTable.containsKey(payloadDestination);
-        if (tableMiss) {
-          InetSocketAddress destination = new InetSocketAddress(CONTROLLER, DEFAULT_PORT);
-          send(new PacketInPacketContent(payloadPacketContent), destination);
-          try {
-            latch.await();
-            latch = new CountDownLatch(1);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-        String nextNodeHop = flowTable.get(payloadDestination);
-        InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
-        send(payloadPacketContent, nextHopAddress);
+        packetBuffer.add(payloadPacketContent);
         break;
       case PacketContent.FEATURE_REQUEST:
         int num_buffers = 11;
@@ -87,10 +80,41 @@ public class Switch extends Node {
     terminal.println("---------------------------------------------------------------------------");
   }
 
-  /** Initialises the router */
-  public void start() {
+  /**
+   * Initialises the router
+   */
+  public void initialise() {
     terminal.println(this.toString());
     send(new HelloPacketContent(versionNumber), new InetSocketAddress(CONTROLLER, DEFAULT_PORT));
+    this.start();
+  }
+
+  /**
+   * Handles the packet buffer. When a payload packet is received, if a table miss occurs, a packet
+   * in is sent to the controller to get a flow mod packet. If the destination is present i.e. a
+   * table miss does not occur, the packet is then forwarded to the correct destination.
+   */
+  @Override
+  public void run() {
+    try {
+      while (true) {
+        PayloadPacketContent toForward = packetBuffer.take();
+        String payloadDestination = toForward.getDestination();
+        boolean tableMiss = !flowTable.containsKey(payloadDestination);
+        if (tableMiss) {
+          InetSocketAddress destination = new InetSocketAddress(CONTROLLER, DEFAULT_PORT);
+          send(new PacketInPacketContent(toForward), destination);
+          //wait for a flow mod packet to arrive
+          latch.await();
+        }
+        latch = new CountDownLatch(1);
+        String nextNodeHop = flowTable.get(payloadDestination);
+        InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
+        send(toForward, nextHopAddress);
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public static void main(String[] args) throws SocketException {
@@ -98,6 +122,6 @@ public class Switch extends Node {
       System.out.println("Usage: java ie.tcd.mantiqul.Switch <connection 1> ... <connection N>");
       return;
     }
-    (new Switch(DEFAULT_PORT, Arrays.asList(args))).start();
+    (new Switch(DEFAULT_PORT, Arrays.asList(args))).initialise();
   }
 }

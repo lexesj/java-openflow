@@ -16,13 +16,13 @@ public class Controller extends Node {
 
   private Terminal terminal;
   private double versionNumber;
-  private Map<String, Map<String, String>> flowTable;
+  private Map<String, Map<String, String>> flowTables;
 
   Controller(int listeningPort) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
     versionNumber = 1.0;
-    initialiseFlowTable();
+    initialiseFlowTables();
     terminal.println(this.toString());
   }
 
@@ -31,7 +31,6 @@ public class Controller extends Node {
    *
    * @param packet The packet received
    */
-  @Override
   public void onReceipt(DatagramPacket packet) {
     PacketContent packetContent = PacketContent.fromDatagramPacket(packet);
     switch (packetContent.type) {
@@ -49,30 +48,30 @@ public class Controller extends Node {
       case PacketContent.PACKET_IN_PACKET:
         PacketInPacketContent packetInPacketContent = (PacketInPacketContent) packetContent;
         String destination = packetInPacketContent.getDestination();
-        String nextHop = flowTable.get(destination).get(packet.getAddress().getCanonicalHostName());
+        String nextHop = flowTables.get(destination).get(packet.getAddress().getCanonicalHostName());
         FlowModPacketContent flowMod = new FlowModPacketContent(nextHop, destination);
         send(flowMod, packet.getAddress(), packet.getPort());
         break;
       default:
         terminal.println("Unknown packet received");
     }
-//    terminal.println("---------------------------------------------------------------------------");
-//    terminal.println(packetContent.toString());
-//    terminal.println("---------------------------------------------------------------------------");
+    terminal.println("---------------------------------------------------------------------------");
+    terminal.println(packetContent.toString());
+    terminal.println("---------------------------------------------------------------------------");
   }
 
-  private void initialiseFlowTable() {
-    flowTable = new ConcurrentHashMap<>();
+  private void initialiseFlowTables() {
+    flowTables = new ConcurrentHashMap<>();
     Map<String, String> endpoint1 = new ConcurrentHashMap<>();
     endpoint1.put("switch0.telecomms", "switch1.telecomms");
     endpoint1.put("switch1.telecomms", "switch2.telecomms");
     endpoint1.put("switch2.telecomms", "endpoint1.telecomms");
-    flowTable.put("endpoint1.telecomms", endpoint1);
+    flowTables.put("endpoint1.telecomms", endpoint1);
     Map<String, String> endpoint0 = new ConcurrentHashMap<>();
     endpoint0.put("switch2.telecomms", "switch1.telecomms");
     endpoint0.put("switch1.telecomms", "switch0.telecomms");
     endpoint0.put("switch0.telecomms", "endpoint0.telecomms");
-    flowTable.put("endpoint0.telecomms", endpoint0);
+    flowTables.put("endpoint0.telecomms", endpoint0);
   }
 
   public static void main(String[] args) throws SocketException {

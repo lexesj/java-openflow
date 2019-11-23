@@ -8,11 +8,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
-public abstract class Node {
+public abstract class Node extends Thread {
   public static final int PACKET_SIZE = 65536;
   public static final int DEFAULT_PORT = 50000;
 
@@ -78,8 +76,7 @@ public abstract class Node {
         while (true) {
           DatagramPacket packet = new DatagramPacket(new byte[PACKET_SIZE], PACKET_SIZE);
           socket.receive(packet);
-          Thread receive = new Thread(() -> onReceipt(packet));
-          receive.start();
+          onReceipt(packet);
         }
       } catch (Exception e) {
         if (!(e instanceof SocketException)) e.printStackTrace();
@@ -92,9 +89,7 @@ public abstract class Node {
     try {
       String ipAddress = String.format("IP Address : %s\n", InetAddress.getLocalHost().toString());
       String port = String.format("Port : %s\n", socket.getLocalPort());
-      char[] line = new char[ipAddress.length() * 2];
-      Arrays.fill(line, '-');
-      String lineString = new String(line);
+      String lineString = "---------------------------------------------------------------------------";
       return lineString + "\n" + ipAddress + port + lineString;
     } catch (UnknownHostException e) {
       e.printStackTrace();
