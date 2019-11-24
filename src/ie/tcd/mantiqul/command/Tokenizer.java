@@ -41,7 +41,7 @@ public class Tokenizer {
    * @param end end index inclusive
    * @return the sub-array containing elements from the start to the end (inclusive) index
    */
-  public String[] splice(int start, int end) {
+  public static String[] splice(String[] tokens, int start, int end) {
     if (start > end) return null;
     else if (end == start) return tokens;
     String[] result = new String[end - start];
