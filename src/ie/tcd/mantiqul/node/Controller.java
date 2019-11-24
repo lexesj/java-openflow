@@ -101,6 +101,7 @@ public class Controller extends Node {
     Graph.Node endNode = graph.getNode(end);
     if (startNode != null && endNode != null) {
       List<Graph.Node> path = graph.getPathBFS(startNode, endNode);
+      terminal.println("Path found '" + Graph.pathToString(path) + "'");
       Map<String, String> destination = new ConcurrentHashMap<>();
       for (int i = 0; i < path.size() - 1; i++) {
         String current = path.get(i).getName();

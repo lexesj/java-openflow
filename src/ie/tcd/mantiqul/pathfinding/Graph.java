@@ -64,6 +64,20 @@ public class Graph {
   }
 
   /**
+   * Returns the path found to a string
+   *
+   * @param path the path taken from the start node to the end node
+   * @return the path found as a string
+   */
+  public static String pathToString(List<Node> path) {
+    StringBuilder result = new StringBuilder(path.get(0).getName());
+    for (int i = 1; i < path.size(); i++) {
+      result.append(" -> ").append(path.get(i).getName());
+    }
+    return result.toString();
+  }
+
+  /**
    * Puts a node into the nodes hash map
    *
    * @param name the name of the node
