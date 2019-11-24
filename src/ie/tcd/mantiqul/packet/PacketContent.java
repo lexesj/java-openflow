@@ -18,6 +18,7 @@ public abstract class PacketContent {
   public static final int FLOW_MOD_PACKET = 103;
   public static final int FEATURE_REQUEST = 105;
   public static final int FEATURE_RESULT = 106;
+  public static final int UNKNOWN_DESTINATION = 107;
 
   public int type = 0;
   public int size;
@@ -61,6 +62,9 @@ public abstract class PacketContent {
           break;
         case FLOW_MOD_PACKET:
           content = new FlowModPacketContent(oin);
+          break;
+        case UNKNOWN_DESTINATION:
+          content = new UnknownDestinationPacketContent(oin);
           break;
       }
       if (content != null)
