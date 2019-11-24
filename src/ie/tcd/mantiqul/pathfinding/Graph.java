@@ -11,11 +11,11 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-public class PathFinder {
+public class Graph {
 
   Map<String, Node> nodes;
 
-  public PathFinder() {
+  public Graph() {
     nodes = new HashMap<>();
   }
 

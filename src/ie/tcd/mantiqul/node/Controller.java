@@ -7,7 +7,7 @@ import ie.tcd.mantiqul.packet.FlowModPacketContent;
 import ie.tcd.mantiqul.packet.HelloPacketContent;
 import ie.tcd.mantiqul.packet.PacketContent;
 import ie.tcd.mantiqul.packet.PacketInPacketContent;
-import ie.tcd.mantiqul.pathfinding.PathFinder;
+import ie.tcd.mantiqul.pathfinding.Graph;
 import java.net.DatagramPacket;
 import java.net.SocketException;
 import java.util.List;
@@ -19,13 +19,13 @@ public class Controller extends Node {
   private Terminal terminal;
   private double versionNumber;
   private Map<String, Map<String, String>> flowTables;
-  private PathFinder pathFinder;
+  private Graph graph;
 
   Controller(int listeningPort) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
     versionNumber = 1.0;
-    pathFinder = new PathFinder();
+    graph = new Graph();
     flowTables = new ConcurrentHashMap<>();
   }
 
@@ -52,14 +52,14 @@ public class Controller extends Node {
             (FeatureResultPacketContent) packetContent;
         String name = featureResultPacketContent.getSwitchName();
         List<String> connections = featureResultPacketContent.getConnections();
-        PathFinder.Node node = pathFinder.getOrDefault(name, new PathFinder.Node(name));
+        Graph.Node node = graph.getOrDefault(name, new Graph.Node(name));
         for (String connection : connections) {
-          PathFinder.Node adjacentNode = pathFinder
-              .getOrDefault(connection, new PathFinder.Node(connection));
-          pathFinder.putNode(connection, adjacentNode);
+          Graph.Node adjacentNode = graph
+              .getOrDefault(connection, new Graph.Node(connection));
+          graph.putNode(connection, adjacentNode);
           node.adjacentAdd(adjacentNode);
         }
-        pathFinder.putNode(name, node);
+        graph.putNode(name, node);
         break;
       case PacketContent.PACKET_IN_PACKET:
         PacketInPacketContent packetInPacketContent = (PacketInPacketContent) packetContent;
@@ -83,9 +83,9 @@ public class Controller extends Node {
   }
 
   private void generatePath(String start, String end) {
-    PathFinder.Node startNode = pathFinder.getNode(start);
-    PathFinder.Node endNode = pathFinder.getNode(end);
-    List<PathFinder.Node> path = pathFinder.getPathBFS(startNode, endNode);
+    Graph.Node startNode = graph.getNode(start);
+    Graph.Node endNode = graph.getNode(end);
+    List<Graph.Node> path = graph.getPathBFS(startNode, endNode);
     Map<String, String> destination = new ConcurrentHashMap<>();
     for (int i = 0; i < path.size() - 1; i++) {
       String current = path.get(i).getName();
