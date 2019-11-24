@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# usage: ./start_straight_line.sh <num routers between endpoints>
+
 xhost +
 
 ./compile.sh
