@@ -55,8 +55,7 @@ public class Controller extends Node {
         List<String> connections = featureResultPacketContent.getConnections();
         Graph.Node node = graph.getOrDefault(name, new Graph.Node(name));
         for (String connection : connections) {
-          Graph.Node adjacentNode = graph
-              .getOrDefault(connection, new Graph.Node(connection));
+          Graph.Node adjacentNode = graph.getOrDefault(connection, new Graph.Node(connection));
           graph.putNode(connection, adjacentNode);
           node.adjacentAdd(adjacentNode);
         }
@@ -66,7 +65,9 @@ public class Controller extends Node {
         PacketInPacketContent packetInPacketContent = (PacketInPacketContent) packetContent;
         String destination = packetInPacketContent.getDestination();
         String switchName = packetInPacketContent.getSwitchName();
-        boolean tableMiss = flowTables.get(destination) == null;
+        boolean tableMiss =
+            !flowTables.containsKey(destination)
+                || !flowTables.get(destination).containsKey(switchName);
         boolean pathFound = true;
         if (tableMiss) {
           pathFound = generatePath(switchName, destination);
@@ -77,23 +78,28 @@ public class Controller extends Node {
           send(flowMod, packet.getAddress(), packet.getPort());
           terminal.println("Forwarding routing table to " + switchName);
         } else {
-          send(new UnknownDestinationPacketContent(destination), packet.getAddress(), packet.getPort());
-          terminal.println("Path not found");
+          send(
+              new UnknownDestinationPacketContent(destination),
+              packet.getAddress(),
+              packet.getPort());
+          terminal.println("Path to '" + destination + "' not found");
         }
         break;
       default:
         terminal.println("Unknown packet received");
     }
-//    terminal.println("---------------------------------------------------------------------------");
-//    terminal.println(packetContent.toString());
-//    terminal.println("---------------------------------------------------------------------------");
+    //
+    // terminal.println("---------------------------------------------------------------------------");
+    //    terminal.println(packetContent.toString());
+    //
+    // terminal.println("---------------------------------------------------------------------------");
   }
 
   /**
    * Creates a flow table entry with containing the route to the destination
    *
    * @param start the starting node
-   * @param end   the end node
+   * @param end the end node
    * @return true if a path was successfully generated false otherwise
    */
   private boolean generatePath(String start, String end) {
