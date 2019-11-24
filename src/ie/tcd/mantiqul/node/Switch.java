@@ -14,11 +14,9 @@ import java.net.SocketException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Switch extends Node {
@@ -121,10 +119,12 @@ public class Switch extends Node {
             latch.await();
           }
           latch = new CountDownLatch(1);
-          String nextNodeHop = flowTable.get(payloadDestination);
-          InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
-          send(toForward, nextHopAddress);
-          terminal.println("Forwarding to " + nextNodeHop);
+          if (flowTable.containsKey(payloadDestination)) {
+            String nextNodeHop = flowTable.get(payloadDestination);
+            InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
+            send(toForward, nextHopAddress);
+            terminal.println("Forwarding to " + nextNodeHop);
+          }
         }
       }
     } catch (InterruptedException e) {
