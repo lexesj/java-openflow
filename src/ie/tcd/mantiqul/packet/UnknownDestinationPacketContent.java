@@ -5,11 +5,14 @@ import java.io.ObjectOutputStream;
 
 public class UnknownDestinationPacketContent extends PacketContent {
 
+  private String destination;
+
   /**
    * Default constructor
    */
-  public UnknownDestinationPacketContent() {
+  public UnknownDestinationPacketContent(String destination) {
     type = UNKNOWN_DESTINATION;
+    this.destination = destination;
   }
 
   /**
@@ -18,7 +21,12 @@ public class UnknownDestinationPacketContent extends PacketContent {
    * @param oin The received packet as an object input stream
    */
   protected UnknownDestinationPacketContent(ObjectInputStream oin) {
-    type = UNKNOWN_DESTINATION;
+    try {
+      type = UNKNOWN_DESTINATION;
+      destination = oin.readUTF();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -27,6 +35,11 @@ public class UnknownDestinationPacketContent extends PacketContent {
    * @param oout The object output stream to write to
    */
   protected void toObjectOutputStream(ObjectOutputStream oout) {
+    try {
+      oout.writeUTF(destination);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -35,6 +48,15 @@ public class UnknownDestinationPacketContent extends PacketContent {
    * @return Returns the content of the packet as String.
    */
   public String toString() {
-    return "UNKNOWN_DESTINATION";
+    return "UNKNOWN_DESTINATION: " + destination;
+  }
+
+  /**
+   * Getter for destination
+   *
+   * @return the destination
+   */
+  public String getDestination() {
+    return destination;
   }
 }

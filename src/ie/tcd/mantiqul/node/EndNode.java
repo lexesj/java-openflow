@@ -48,7 +48,7 @@ public class EndNode extends Node {
     switch (packetContent.type) {
       case PacketContent.PAYLOAD_PACKET:
         PayloadPacketContent payloadPacketContent = (PayloadPacketContent) packetContent;
-        terminal.println(payloadPacketContent.getPayload());
+        terminal.println("Received message '" + payloadPacketContent.getPayload() + "'");
         break;
       default:
         terminal.println("Unknown packet received");
@@ -67,7 +67,7 @@ public class EndNode extends Node {
   private void executeCommand(String command, String[] args) {
     switch (command) {
       case "message":
-        if (args.length < 2) {
+        if (args.length < 3) {
           terminal.println(MESSAGE_USAGE);
         } else if ("send".equals(args[0])) {
           String message = args[1];
@@ -82,6 +82,8 @@ public class EndNode extends Node {
       case "help":
         terminal.println(HELP_MESSAGE);
         break;
+      default:
+        terminal.println("Command '" + command + "' was not found");
     }
   }
 

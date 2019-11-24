@@ -7,6 +7,7 @@ import ie.tcd.mantiqul.packet.HelloPacketContent;
 import ie.tcd.mantiqul.packet.PacketContent;
 import ie.tcd.mantiqul.packet.PacketInPacketContent;
 import ie.tcd.mantiqul.packet.PayloadPacketContent;
+import ie.tcd.mantiqul.packet.UnknownDestinationPacketContent;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
@@ -75,6 +76,13 @@ public class Switch extends Node {
         flowTable.put(flowMod.getDestination(), flowMod.getNextHop());
         latch.countDown();
         break;
+      case PacketContent.UNKNOWN_DESTINATION:
+        UnknownDestinationPacketContent unknownDestinationPacketContent =
+            (UnknownDestinationPacketContent) packetContent;
+        terminal.println(
+            "Destination '" + unknownDestinationPacketContent.getDestination() + "' not found");
+        latch.countDown();
+        break;
       default:
         terminal.println("Unknown packet received");
     }
@@ -103,19 +111,21 @@ public class Switch extends Node {
         PayloadPacketContent toForward = packetBuffer.take();
         toForward.setSwitchName(name);
         String payloadDestination = toForward.getDestination();
-        boolean tableMiss = !flowTable.containsKey(payloadDestination);
-        if (tableMiss) {
-          InetSocketAddress destination = new InetSocketAddress(CONTROLLER, DEFAULT_PORT);
-          send(new PacketInPacketContent(toForward), destination);
-          terminal.println("Destination unknown, asking controller for next destination");
-          //wait for a flow mod packet to arrive
-          latch.await();
+        if (!payloadDestination.equals(name)) {
+          boolean tableMiss = !flowTable.containsKey(payloadDestination);
+          if (tableMiss) {
+            InetSocketAddress destination = new InetSocketAddress(CONTROLLER, DEFAULT_PORT);
+            send(new PacketInPacketContent(toForward), destination);
+            terminal.println("Destination unknown, asking controller for next destination");
+            //wait for a flow mod packet to arrive
+            latch.await();
+          }
+          latch = new CountDownLatch(1);
+          String nextNodeHop = flowTable.get(payloadDestination);
+          InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
+          send(toForward, nextHopAddress);
+          terminal.println("Forwarding to " + nextNodeHop);
         }
-        latch = new CountDownLatch(1);
-        String nextNodeHop = flowTable.get(payloadDestination);
-        InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
-        send(toForward, nextHopAddress);
-        terminal.println("Forwarding to " + nextNodeHop);
       }
     } catch (InterruptedException e) {
       e.printStackTrace();

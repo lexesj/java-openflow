@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * This class is used for path finding
+ */
 public class Graph {
 
   Map<String, Node> nodes;
@@ -84,7 +87,7 @@ public class Graph {
   /**
    * Gets the node if it exists else the default value
    *
-   * @param name the node's name
+   * @param name       the node's name
    * @param defaultVal the default node to return
    * @return the node with the associated name if it is in the hashmap else the default value
    */

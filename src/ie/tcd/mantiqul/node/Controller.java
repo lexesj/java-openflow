@@ -7,6 +7,7 @@ import ie.tcd.mantiqul.packet.FlowModPacketContent;
 import ie.tcd.mantiqul.packet.HelloPacketContent;
 import ie.tcd.mantiqul.packet.PacketContent;
 import ie.tcd.mantiqul.packet.PacketInPacketContent;
+import ie.tcd.mantiqul.packet.UnknownDestinationPacketContent;
 import ie.tcd.mantiqul.pathfinding.Graph;
 import java.net.DatagramPacket;
 import java.net.SocketException;
@@ -66,13 +67,19 @@ public class Controller extends Node {
         String destination = packetInPacketContent.getDestination();
         String switchName = packetInPacketContent.getSwitchName();
         boolean tableMiss = flowTables.get(destination) == null;
+        boolean pathFound = true;
         if (tableMiss) {
-          generatePath(switchName, destination);
+          pathFound = generatePath(switchName, destination);
         }
-        String nextHop = flowTables.get(destination).get(switchName);
-        FlowModPacketContent flowMod = new FlowModPacketContent(nextHop, destination);
-        send(flowMod, packet.getAddress(), packet.getPort());
-        terminal.println("Forwarding routing table to " + switchName);
+        if (pathFound) {
+          String nextHop = flowTables.get(destination).get(switchName);
+          FlowModPacketContent flowMod = new FlowModPacketContent(nextHop, destination);
+          send(flowMod, packet.getAddress(), packet.getPort());
+          terminal.println("Forwarding routing table to " + switchName);
+        } else {
+          send(new UnknownDestinationPacketContent(destination), packet.getAddress(), packet.getPort());
+          terminal.println("Path not found");
+        }
         break;
       default:
         terminal.println("Unknown packet received");
@@ -82,17 +89,28 @@ public class Controller extends Node {
 //    terminal.println("---------------------------------------------------------------------------");
   }
 
-  private void generatePath(String start, String end) {
+  /**
+   * Creates a flow table entry with containing the route to the destination
+   *
+   * @param start the starting node
+   * @param end   the end node
+   * @return true if a path was successfully generated false otherwise
+   */
+  private boolean generatePath(String start, String end) {
     Graph.Node startNode = graph.getNode(start);
     Graph.Node endNode = graph.getNode(end);
-    List<Graph.Node> path = graph.getPathBFS(startNode, endNode);
-    Map<String, String> destination = new ConcurrentHashMap<>();
-    for (int i = 0; i < path.size() - 1; i++) {
-      String current = path.get(i).getName();
-      String nextHop = path.get(i + 1).getName();
-      destination.put(current, nextHop);
+    if (startNode != null && endNode != null) {
+      List<Graph.Node> path = graph.getPathBFS(startNode, endNode);
+      Map<String, String> destination = new ConcurrentHashMap<>();
+      for (int i = 0; i < path.size() - 1; i++) {
+        String current = path.get(i).getName();
+        String nextHop = path.get(i + 1).getName();
+        destination.put(current, nextHop);
+      }
+      flowTables.put(end, destination);
+      return true;
     }
-    flowTables.put(end, destination);
+    return false;
   }
 
   public static void main(String[] args) throws SocketException {

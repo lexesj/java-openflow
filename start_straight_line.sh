@@ -22,13 +22,18 @@ fi
 
 for i in `seq 0 $NUM_PORTS`;
 do
+  CONNECTIONS=""
   if [ $i -eq 0 ]; then
-    ./switch.sh switch$i switch$(($i + 1)) endpoint0 &
-  elif [ $i -ne $NUM_PORTS ]; then
-    ./switch.sh switch$i switch$(($i - 1)) switch$(($i + 1)) &
-  else
-    ./switch.sh switch$i switch$(($i - 1)) endpoint1 &
+    CONNECTIONS="${CONNECTIONS} switch$(($i + 1)) endpoint0"
   fi
+  if [ $i -ne $NUM_PORTS ]; then
+    CONNECTIONS="${CONNECTIONS} switch$(($i - 1)) switch$(($i + 1))"
+  fi
+  if [ $i -eq $NUM_PORTS ]; then
+    CONNECTIONS="${CONNECTIONS} switch$(($i - 1)) endpoint1"
+  fi
+  TRIMMED=$(echo $CONNECTIONS | xargs)
+  ./switch.sh switch$i $CONNECTIONS &
 done
 
 ./endpoint.sh endpoint0 switch0 &

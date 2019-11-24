@@ -9,7 +9,7 @@ public class HelloPacketContent extends PacketContent {
   private double versionNumber;
 
   /**
-   * Constructor that takes in information about an acknowledgement.
+   * Constructor that takes in information about an hello packet.
    *
    * @param versionNumber the openflow version
    */
