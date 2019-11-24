@@ -20,7 +20,7 @@ public class Graph {
   }
 
   /**
-   * Gets a path from one node to the next
+   * Gets a path from the start node to the end using a breadth first search algorithm
    *
    * @param start the starting node
    * @param end   the destination node
@@ -28,7 +28,7 @@ public class Graph {
    */
   public List<Node> getPathBFS(Node start, Node end) {
     Map<Node, Node> prev = new HashMap<>();
-    Queue<Node> queue = new PriorityQueue<>();
+    Queue<Node> queue = new LinkedList<>();
     Set<Node> seen = new HashSet<>();
     queue.add(start);
     seen.add(start);
