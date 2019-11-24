@@ -25,7 +25,6 @@ public class Controller extends Node {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
     versionNumber = 1.0;
-    terminal.println(this.toString());
     pathFinder = new PathFinder();
     flowTables = new ConcurrentHashMap<>();
   }
@@ -76,9 +75,9 @@ public class Controller extends Node {
       default:
         terminal.println("Unknown packet received");
     }
-    terminal.println("---------------------------------------------------------------------------");
-    terminal.println(packetContent.toString());
-    terminal.println("---------------------------------------------------------------------------");
+//    terminal.println("---------------------------------------------------------------------------");
+//    terminal.println(packetContent.toString());
+//    terminal.println("---------------------------------------------------------------------------");
   }
 
   private void generatePath(String start, String end) {

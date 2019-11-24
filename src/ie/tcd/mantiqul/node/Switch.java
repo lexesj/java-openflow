@@ -77,16 +77,15 @@ public class Switch extends Node {
       default:
         terminal.println("Unknown packet received");
     }
-    terminal.println("---------------------------------------------------------------------------");
-    terminal.println(packetContent.toString());
-    terminal.println("---------------------------------------------------------------------------");
+//    terminal.println("---------------------------------------------------------------------------");
+//    terminal.println(packetContent.toString());
+//    terminal.println("---------------------------------------------------------------------------");
   }
 
   /**
    * Initialises the router
    */
   public void initialise() {
-    terminal.println(this.toString());
     send(new HelloPacketContent(versionNumber), new InetSocketAddress(CONTROLLER, DEFAULT_PORT));
     this.start();
   }

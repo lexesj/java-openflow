@@ -20,7 +20,6 @@ public class EndNode extends Node {
   }
 
   public void start() {
-    terminal.println(this.toString());
     while (true) {
       String commandString = terminal.read(PREFIX);
       String destination = terminal.read(PREFIX);
