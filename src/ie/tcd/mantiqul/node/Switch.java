@@ -57,6 +57,7 @@ public class Switch extends Node {
         if (receivedVersionNumber < versionNumber) {
           versionNumber = receivedVersionNumber;
         }
+        terminal.println("Hello from " + packet.getAddress().getHostName());
         break;
       case PacketContent.PAYLOAD_PACKET:
         PayloadPacketContent payloadPacketContent = (PayloadPacketContent) packetContent;
@@ -106,6 +107,7 @@ public class Switch extends Node {
         if (tableMiss) {
           InetSocketAddress destination = new InetSocketAddress(CONTROLLER, DEFAULT_PORT);
           send(new PacketInPacketContent(toForward), destination);
+          terminal.println("Destination unknown, asking controller for next destination");
           //wait for a flow mod packet to arrive
           latch.await();
         }
@@ -113,6 +115,7 @@ public class Switch extends Node {
         String nextNodeHop = flowTable.get(payloadDestination);
         InetSocketAddress nextHopAddress = new InetSocketAddress(nextNodeHop, DEFAULT_PORT);
         send(toForward, nextHopAddress);
+        terminal.println("Forwarding to " + nextNodeHop);
       }
     } catch (InterruptedException e) {
       e.printStackTrace();

@@ -45,6 +45,7 @@ public class Controller extends Node {
         }
         send(new HelloPacketContent(versionNumber), packet.getAddress(), packet.getPort());
         send(new FeatureRequestPacketContent(), packet.getAddress(), packet.getPort());
+        terminal.println("Hello from " + packet.getAddress().getHostName());
         break;
       case PacketContent.FEATURE_RESULT:
         FeatureResultPacketContent featureResultPacketContent =
@@ -71,6 +72,7 @@ public class Controller extends Node {
         String nextHop = flowTables.get(destination).get(switchName);
         FlowModPacketContent flowMod = new FlowModPacketContent(nextHop, destination);
         send(flowMod, packet.getAddress(), packet.getPort());
+        terminal.println("Forwarding routing table to " + switchName);
         break;
       default:
         terminal.println("Unknown packet received");
