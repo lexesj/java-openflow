@@ -86,4 +86,23 @@ public class FeatureResultPacketContent extends PacketContent {
     for (String connection : connections) result.append(connection).append(" ");
     return result.toString();
   }
+
+  /**
+   * Returns switch name
+   *
+   * @return switch name
+   */
+  public String getSwitchName() {
+    return switchName;
+  }
+
+  /**
+   * Returns switch's connections
+   *
+   * @return the switch's connections
+   */
+  public List<String> getConnections() {
+    return connections;
+  }
+
 }

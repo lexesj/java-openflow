@@ -7,8 +7,10 @@ import ie.tcd.mantiqul.packet.FlowModPacketContent;
 import ie.tcd.mantiqul.packet.HelloPacketContent;
 import ie.tcd.mantiqul.packet.PacketContent;
 import ie.tcd.mantiqul.packet.PacketInPacketContent;
+import ie.tcd.mantiqul.pathfinding.PathFinder;
 import java.net.DatagramPacket;
 import java.net.SocketException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,13 +19,15 @@ public class Controller extends Node {
   private Terminal terminal;
   private double versionNumber;
   private Map<String, Map<String, String>> flowTables;
+  private PathFinder pathFinder;
 
   Controller(int listeningPort) throws SocketException {
     super(listeningPort);
     terminal = new Terminal(getClass().getSimpleName());
     versionNumber = 1.0;
-    initialiseFlowTables();
     terminal.println(this.toString());
+    pathFinder = new PathFinder();
+    flowTables = new ConcurrentHashMap<>();
   }
 
   /**
@@ -37,18 +41,34 @@ public class Controller extends Node {
       case PacketContent.HELLO_PACKET:
         HelloPacketContent helloPacketContent = (HelloPacketContent) packetContent;
         double receivedVersionNumber = helloPacketContent.getVersionNumber();
-        if (receivedVersionNumber < versionNumber) versionNumber = receivedVersionNumber;
+        if (receivedVersionNumber < versionNumber) {
+          versionNumber = receivedVersionNumber;
+        }
         send(new HelloPacketContent(versionNumber), packet.getAddress(), packet.getPort());
         send(new FeatureRequestPacketContent(), packet.getAddress(), packet.getPort());
         break;
       case PacketContent.FEATURE_RESULT:
         FeatureResultPacketContent featureResultPacketContent =
             (FeatureResultPacketContent) packetContent;
+        String name = featureResultPacketContent.getSwitchName();
+        List<String> connections = featureResultPacketContent.getConnections();
+        PathFinder.Node node = pathFinder.getOrDefault(name, new PathFinder.Node(name));
+        for (String connection : connections) {
+          PathFinder.Node adjacentNode = pathFinder
+              .getOrDefault(connection, new PathFinder.Node(connection));
+          pathFinder.putNode(connection, adjacentNode);
+          node.adjacentAdd(adjacentNode);
+        }
+        pathFinder.putNode(name, node);
         break;
       case PacketContent.PACKET_IN_PACKET:
         PacketInPacketContent packetInPacketContent = (PacketInPacketContent) packetContent;
         String destination = packetInPacketContent.getDestination();
         String switchName = packetInPacketContent.getSwitchName();
+        boolean tableMiss = flowTables.get(destination) == null;
+        if (tableMiss) {
+          generatePath(switchName, destination);
+        }
         String nextHop = flowTables.get(destination).get(switchName);
         FlowModPacketContent flowMod = new FlowModPacketContent(nextHop, destination);
         send(flowMod, packet.getAddress(), packet.getPort());
@@ -61,18 +81,17 @@ public class Controller extends Node {
     terminal.println("---------------------------------------------------------------------------");
   }
 
-  private void initialiseFlowTables() {
-    flowTables = new ConcurrentHashMap<>();
-    Map<String, String> endpoint1 = new ConcurrentHashMap<>();
-    endpoint1.put("switch0", "switch1");
-    endpoint1.put("switch1", "switch2");
-    endpoint1.put("switch2", "endpoint1");
-    flowTables.put("endpoint1", endpoint1);
-    Map<String, String> endpoint0 = new ConcurrentHashMap<>();
-    endpoint0.put("switch2", "switch1");
-    endpoint0.put("switch1", "switch0");
-    endpoint0.put("switch0", "endpoint0");
-    flowTables.put("endpoint0", endpoint0);
+  private void generatePath(String start, String end) {
+    PathFinder.Node startNode = pathFinder.getNode(start);
+    PathFinder.Node endNode = pathFinder.getNode(end);
+    List<PathFinder.Node> path = pathFinder.getPathBFS(startNode, endNode);
+    Map<String, String> destination = new ConcurrentHashMap<>();
+    for (int i = 0; i < path.size() - 1; i++) {
+      String current = path.get(i).getName();
+      String nextHop = path.get(i + 1).getName();
+      destination.put(current, nextHop);
+    }
+    flowTables.put(end, destination);
   }
 
   public static void main(String[] args) throws SocketException {
