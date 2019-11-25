@@ -1,0 +1,144 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage[square,numbers]{natbib}
+
+%%------------------------------------------------
+%% Image and Listing code
+%%------------------------------------------------
+%% Examples for the commands in the document below
+%%
+%% includecode:
+%% \includecode{caption for table of listings}{caption for reader}{filename}
+%% - includes a file with code and adds a caption that should describe the code in some detail and a shorter caption for the table of listings
+\newcommand{\includecode}[4]{\lstinputlisting[float,floatplacement=H,
+caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
+
+%% includefigure:
+%% \includefigure{label}{short caption}{long caption}{filename}
+%% - includes a figure with a given label, a short caption for the table of contents and a longer caption that describes the figure in some detail
+\newcommand{\includefigure}[4]{
+  \begin{figure}[H]
+    \centering
+    \includegraphics{#4}
+    \captionsetup{width=.8\linewidth}
+    \caption[#2]{#3}
+    \label{#1}
+  \end{figure}
+}
+
+%% includescalefigure:
+%% \includescalefigure{label}{short caption}{long caption}{scale}{filename}
+%% - includes a figure with a given label, a short caption for the table of contents and a longer caption that describes the figure in some detail and a scale factor 'scale'
+\newcommand{\includescalefigure}[5]{
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=#4\linewidth]{#5}
+    \captionsetup{width=.8\linewidth}
+    \caption[#2]{#3}
+    \label{#1}
+  \end{figure}
+}
+
+
+%%------------------------------------------------
+%% Parameters
+%%------------------------------------------------
+% Set up the header and footer
+\newcommand{\assignmentTitle}{Assignment\ \#1: Protocols} % Assignment title
+\newcommand{\moduleCode}{CS2031} 
+\newcommand{\moduleName}{Telecommunications\ II} 
+\newcommand{\authorName}{Lexes\ Jan\ Mantiquilla} % Your name
+\newcommand{\authorID}{-1} % Your student ID
+
+
+\title{\textbf{\moduleCode\ \moduleName}}
+\author{\authorName\ -\ \authorID}
+\bibliographystyle{abbrvnat}
+% Fix url
+\Urlmuskip=0mu plus 1mu
+\graphicspath{{images/}}
+
+%%------------------------------------------------
+%% Document
+%%------------------------------------------------
+\begin{document}
+\captionsetup{width=.8\linewidth} 
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+\subsection{Problem Statement}
+
+\subsection{Approach}
+
+\section{Overall Design}
+
+\subsection{Problem Statement}
+
+\subsection{Features}
+
+\subsection{OpenFlow}
+
+\subsection{Design of the Protocol}
+
+\subsection{Packet Descriptions}
+
+\section{Implementation}
+
+\subsection{Packet Classes}
+
+\subsubsection{FeatureRequestPacketContent}
+
+\subsubsection{FeatureResultPacketContent}
+
+\subsubsection{FlowModPacketContent}
+
+\subsubsection{HelloPacketContent}
+
+\subsubsection{PacketContent}
+
+\subsubsection{PacketInPacketContent}
+
+\subsubsection{PayloadPacketContent}
+
+\subsection{Node Classes}
+
+\subsubsection{Controller}
+
+\subsubsection{EndNode}
+
+\subsubsection{Node}
+
+\subsubsection{Switch}
+
+\subsection{Path Finding class}
+
+\subsubsection{Graph}
+
+\subsection{Miscellaneous Classes}
+
+\subsubsection{Terminal}
+
+\subsubsection{Tokenizer}
+
+\section{Advantages and Disadvantages}
+
+\subsection{Advantages}
+
+\subsection{Disadvantages}
+
+\section{Program Usage}
+
+\section{Reflection}
+
+\end{document}
