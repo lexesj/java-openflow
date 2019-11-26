@@ -50,14 +50,14 @@ caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
 %% Parameters
 %%------------------------------------------------
 % Set up the header and footer
-\newcommand{\assignmentTitle}{Assignment\ \#1: Protocols} % Assignment title
-\newcommand{\moduleCode}{CS2031} 
-\newcommand{\moduleName}{Telecommunications\ II} 
+\newcommand{\assignmentTitle}{Assignment\ \#2: OpenFlow} % Assignment title
+\newcommand{\moduleCode}{CS2031}
+\newcommand{\moduleName}{Telecommunications\ II}
 \newcommand{\authorName}{Lexes\ Jan\ Mantiquilla} % Your name
 \newcommand{\authorID}{-1} % Your student ID
 
 
-\title{\textbf{\moduleCode\ \moduleName}}
+\title{\textbf{\moduleCode\ \moduleName\ \assignmentTitle}}
 \author{\authorName\ -\ \authorID}
 \bibliographystyle{abbrvnat}
 % Fix url
@@ -68,7 +68,7 @@ caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
 %% Document
 %%------------------------------------------------
 \begin{document}
-\captionsetup{width=.8\linewidth} 
+\captionsetup{width=.8\linewidth}
 
 \maketitle
 \tableofcontents
@@ -94,8 +94,21 @@ caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
 \subsection{Packet Descriptions}
 
 \section{Implementation}
+This section contains an explanation of the implementation. It will describe how
+each of the classes used implement the design described above.
 
 \subsection{Packet Classes}
+The packet classes are encoded using the method ObejectInputStream and
+ByteArrayInputStream. This allows us to create a byte array which is then used
+to create a DatagramPacket. The abstract class PacketContent and the classes
+which inherit it abstract the creation of DatagramPackets. The abstract
+methods toByteArray and fromDatagramPacket do the encoding of the
+DatagramPacket. Each implementation of the PacketContent class has their own
+implementation of the abstract methods toByteArray and fromDatagramPacket. The
+abstract PacketContent abstract class and the AckPacketContent class have been
+provided to us in the Advanced sample code. I have created other packet classes
+which implement the PacketContent abstract class. The PacketContent class has
+been slightly modified to also store the frame id.
 
 \subsubsection{FeatureRequestPacketContent}
 
