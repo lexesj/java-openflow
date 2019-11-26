@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -ne 3 ]; then
+  echo "Usage: $0 <x pos> <y pos> <num switches>"
+  exit 1
+fi
+
 WIDTH=350
 HEIGHT=200
 BAR_HEIGHT=30
