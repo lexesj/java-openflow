@@ -107,22 +107,61 @@ DatagramPacket. Each implementation of the PacketContent class has their own
 implementation of the abstract methods toByteArray and fromDatagramPacket. The
 abstract PacketContent abstract class and the AckPacketContent class have been
 provided to us in the Advanced sample code. I have created other packet classes
-which implement the PacketContent abstract class. The PacketContent class has
-been slightly modified to also store the frame id.
+which implement the PacketContent abstract class.
 
 \subsubsection{FeatureRequestPacketContent}
+This class is used to create a packet which represents a feature request
+packet. The feature request packet is sent by the \textbf{Controller} to a
+switch upon receiving a Hello packet. The feature request packet does not
+contain any data and only contains its type.
 
 \subsubsection{FeatureResultPacketContent}
+This class is used to create a packet which represents a feature result packet.
+The feature result packet is sent by the \textbf{Switch} to the
+\textbf{Controller} in response to a feature request packet from the
+\textbf{Controller}. The feature request packet contains information about the
+specifications of the \textbf{Switch} such as the number of tables it has and
+the size of the buffer. The buffer size and number of tables currently have no
+use and is only included as it was a part of the OpenFlow specification. The
+feature result packet also contains the \textbf{Switch's} name and its
+connections. The switch connections are used when calculating the path to the
+specified destination.
 
 \subsubsection{FlowModPacketContent}
+This class is used to create a packet which represents a flow mod packet. The
+flow mod packet is sent by the \textbf{Controller} to a \textbf{Switch}. The
+flow mod packet is used to change a \textbf{Switch's} flow table. The flow mod
+packet contains two strings, the destination and the next hop. Upon receiving a
+flow mod packet, the \textbf{Switch} update it's flow table with the destination
+as the key and the next hop as the value.
 
 \subsubsection{HelloPacketContent}
-
-\subsubsection{PacketContent}
+This class is used to create a packet which represents a hello packet. The hello
+packet is sent by both the \textbf{Switch} and \textbf{Controller}. The hello
+packet contains the version number. When receiving a hello packet, the lower
+version of the protocol is set. In my assignment, the default version number
+is set to 1. In my version of OpenFlow, the hello packet is sent first by the
+\textbf{Switch} to the \textbf{Controller} upon initialisation. The
+\textbf{Controller} then responds with it's own hello packet back to the
+\textbf{Switch}. This differs from the actual OpenFlow specification as the
+hello packet should be asynchronous.
 
 \subsubsection{PacketInPacketContent}
+This class is used to create a packet which represents a packet in packet. The
+packet in packet is sent by the \textbf{Switch} to the \textbf{Controller}.
+This packet is used to ask the \textbf{Controller} for a flow mod packet. This
+packet is sent in the case where a table miss occurs and the switch does not
+know where to forward the packet. The packet in packet contains the final
+destination of the packet and the switch name. The destination and the switch
+name are both keys in the \textbf{Controller's} flow tables.
 
 \subsubsection{PayloadPacketContent}
+This class is used to create a packet which represents a payload packet. The
+payload packet contains the payload i.e. the string containing the message and
+final destination of the packet. This packet is sent by the \textbf{EndNodes}
+as well as the \textbf{Switches}. This packet is the packet which is forwarded
+from \textbf{Switch} to \textbf{Switch} and to the final destination
+\textbf{EndNode}.
 
 \subsection{Node Classes}
 
