@@ -164,27 +164,97 @@ from \textbf{Switch} to \textbf{Switch} and to the final destination
 \textbf{EndNode}.
 
 \subsection{Node Classes}
+This section includes a description of each of the nodes classes which are
+interfaced by the terminal. They represent any type of node in the network.
 
 \subsubsection{Controller}
+The \textbf{Controller} is used to direct the \textbf{Switches} when they have
+no flow table entry for a packet. The \textbf{Controller} sends a flow mod
+packet upon receiving a packet in packet. The paths are stored in a hash table.
+They key is a string which is the final destination the packet to be forwarded.
+The value is another hash table of which the key is the switch. The value is the
+next hop the switch has to forward the packet to.
+
+The \textbf{Controller} used to contain a predefined path. However I have since
+changed it to use Link State Routing. The \textbf{Controller} uses the Graph
+class in order to calculate a path to the destination. If the destination is not
+in the hash table, the path is calculated and is then stored into the hash table.
+The path is only generated when a \textbf{Switch} requests for the next hop and
+the destination is not found in the flow table. If no path is found, the
+\textbf{Controller} sends an unknown destination packet to the \textbf{Switch}.
 
 \subsubsection{EndNode}
+The \textbf{EndNode} is where the user can send and receive messages. The user
+is able to choose another \textbf{EndNode} to send the message to. The message
+it takes in is of type string and is encapsulated in a payload packet. This
+payload packet is sent to a \textbf{Switch} which is then forwarded to another
+\textbf{Switch} or to the destination \textbf{EndNode}. When an \textbf{EndNode}
+receives a payload packet, the message is printed out to the terminal.
+
+The \textbf{EndNode} implements a command system. This command system contains
+the commands ``help'', ``clear'' and ``message send
+\textless`message'\textgreater
+\textless{}destin-\newline{}ation\textgreater{}''. The ``help'' command is used
+to display all the commands available. The ``clear'' command is used to clear the
+terminal screen and the ``message send'' command is used to send a string
+message to the destination \textbf{EndNode}.
 
 \subsubsection{Node}
+This class is an abstract class which all of the \textbf{Node} classes inherit.
+This class has been provided to us from the advanced sample code. It has been
+modified slightly in the previous assignment, the changes of which is carried
+through to this assignment.
 
 \subsubsection{Switch}
+The \textbf{Switch} class uses a hash table to store the payload packet's next
+hop. When the \textbf{Switch} receives a payload packet, the destination is
+looked up in the hash table. If the destination in the hash table exists, the
+packet is then forwarded to the next hop. If the destination does not exist,
+then the \textbf{Switch} sends a packet in packet to the \textbf{Controller}.
+A countdown latch is used to wait for a flow mod packet to arrive. Upon the
+arrival of a flow mod packet, the payload packet is then forwarded to the
+next hop.
+
+A queue called the packet buffer is used to deal with payload packet arrivals.
+This allows the payload packets to be handled one at a time and asynchronously.
+An infinite loop is used to process the payload packets in a thread.
 
 \subsection{Path Finding class}
+This path finding class is used to implement the link state routing. It
+implements the algorithm which computes the path to the destination.
 
 \subsubsection{Graph}
+The graph class contains a node class. This node class represents nodes in the
+network in a graph. The node class contains the name of the node as well as the
+node's adjacent nodes. This abstract data structure is used when calculating the
+path to the destination.
+
+All of the nodes are stored in the graph's hash table. The key of the hash
+table is a string which is the name of the node. The value of the hash table is
+the reference to the node which has that name.
+
+I found it difficult to measure the latency between the connections in docker
+and thus was unable to obtain the weights of the edges in the graph. I used a
+breadth first search algorithm instead of Dijkstra's algorithm for this reason.
 
 \subsection{Miscellaneous Classes}
+This section contains an explanation of the classes which did not fit into the
+other categories.
 
 \subsubsection{Terminal}
+The terminal class was provided to us in the sample code. I have slightly
+modified the terminal class to have the ability to clear the terminal screen
+as well as read a boolean from the user. The boolean function was implemented
+using JOptionPane to display a yes or no question. The boolean function however
+was not used in this assignment but was used in the first assignment.
 
 \subsubsection{Tokenizer}
+The tokenizer class was used to split up the command into tokens and has the
+ability to separate messages in quotations. This was created instead of using
+the string split function as it allows the message sent to have spaces instead
+of being a single word.
 
 \section{Advantages and Disadvantages}
-
 \subsection{Advantages}
 
 \subsection{Disadvantages}
