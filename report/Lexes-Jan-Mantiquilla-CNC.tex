@@ -284,8 +284,8 @@ arrival of a flow mod packet, the payload packet is then forwarded to the
 next hop.
 
 A queue called the packet buffer is used to deal with payload packet arrivals.
-This allows the payload packets to be handled one at a time and asynchronously.
-An infinite loop is used to process the payload packets in a thread.
+This allows the payload packets to be handled one at a time.  An infinite loop
+is used to process the payload packets in a thread.
 
 \subsection{Path Finding class}
 This path finding class is used to implement the link state routing. It
