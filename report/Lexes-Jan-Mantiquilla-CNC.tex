@@ -239,7 +239,7 @@ interfaced by the terminal. They represent any type of node in the network.
 The \textbf{Controller} is used to direct the \textbf{Switches} when they have
 no flow table entry for a packet. The \textbf{Controller} sends a flow mod
 packet upon receiving a packet in packet. The paths are stored in a hash table.
-They key is a string which is the final destination the packet to be forwarded.
+The key is a string which is the final destination the packet to be forwarded.
 The value is another hash table of which the key is the switch. The value is the
 next hop the switch has to forward the packet to.
 
