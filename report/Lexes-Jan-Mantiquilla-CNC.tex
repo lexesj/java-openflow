@@ -80,12 +80,12 @@ caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
 \subsection{Problem Statement}
 In this assignment we are tasked to design a protocol which implements our own
 version of the OpenFlow software defined networking standard. We are tasked to
-create a protocol consisting of \textbf{EndNodes}, \textbf{Switches} and a
-\textbf{Controller} in which the \textbf{EndNodes} can send messages between
+create a protocol consisting of \textbf{End-Nodes}, \textbf{Switches} and a
+\textbf{Controller} in which the \textbf{End-Nodes} can send messages between
 each other. However we must emulate the OpenFlow standard which means that we
 mush send the payload packet to a switch which will then forward the packet to
 another \textbf{Switch} until the \textbf{Switch} forwards it to the destination
-\textbf{EndNode}.
+\textbf{End-Node}.
 
 \subsection{Approach}
 Using my knowledge from the previous assignment, I was able to immediately
@@ -109,12 +109,57 @@ OpenFlow standard and the protocol I have decided to implement to solve the
 problem statement.
 
 \subsection{Features}
+I have implemented the required features described in the problem statement and
+the Link State Routing as a part of the advanced implementation features. The
+features that I have implemented are the following:
+
+\subsubsection{Controller}
+\begin{itemize}
+  \item{Ability to reply to hello packet and issue a feature request.}
+  \item{Ability to accept packet in packets.}
+  \item{Ability to respond to packet in packets with a flow mod packet.}
+  \item{Ability to find a path from one \textbf{End-Node} to another with any
+    valid network configuration.}
+\end{itemize}
+
+\subsubsection{Switch}
+\begin{itemize}
+  \item{Ability to make contact with the \textbf{Controller} and reply to a
+      feature request packet.}
+  \item{Sends out packet in packets when the flow table does not contain an
+    entry for the final packet destination}
+  \item{Ability to receive and update the flow tables according to the flow mod
+    packet received.}
+  \item{Ability to receive payload packets from the end nodes.}
+  \item{Ability to forward packets based on a flow table.}
+\end{itemize}
+
+\subsubsection{End-Node}
+\begin{itemize}
+  \item{Can send messages to another \textbf{End-Node}.}
+  \item{Can receive messages forwarded by a \textbf{Switch}.}
+  \item{Implements a simple command system.}
+  \item{Can run commands such as ``clear'', and ``help''.}
+\end{itemize}
 
 \subsection{OpenFlow}
 
 \subsection{Design of the Protocol}
 
 \subsection{Packet Descriptions}
+There are many types of packets which I have created and is use when
+transferring data between the nodes in the network. The feature request packet
+is used to ask the \textbf{Switches} to send their specifications to the
+\textbf{Controller}. The feature result packet contains information about the
+\textbf{Switches} and is used when creating a graph of the network
+configuration. The flow mod packet is used to modify the \textbf{Switches'}
+flow tables. The packet in packet is used to ask the \textbf{Controller} the
+next hop the payload packet has to take to reach the destination. The payload
+packet stores the message as well as the name of the switch and the destination
+node. This packet is the one which is forwarded between the nodes in the
+network. The unknown destination packet is used to indicate to the switches
+that destination does not exist or a path could not be found. The hello packet
+is used in initialisation of the switches and to set the version number.
 
 \section{Implementation}
 This section contains an explanation of the implementation. It will describe how
@@ -181,10 +226,10 @@ name are both keys in the \textbf{Controller's} flow tables.
 \subsubsection{PayloadPacketContent}
 This class is used to create a packet which represents a payload packet. The
 payload packet contains the payload i.e. the string containing the message and
-final destination of the packet. This packet is sent by the \textbf{EndNodes}
+final destination of the packet. This packet is sent by the \textbf{End-Nodes}
 as well as the \textbf{Switches}. This packet is the packet which is forwarded
 from \textbf{Switch} to \textbf{Switch} and to the final destination
-\textbf{EndNode}.
+\textbf{End-Node}.
 
 \subsection{Node Classes}
 This section includes a description of each of the nodes classes which are
@@ -207,20 +252,20 @@ the destination is not found in the flow table. If no path is found, the
 \textbf{Controller} sends an unknown destination packet to the \textbf{Switch}.
 
 \subsubsection{EndNode}
-The \textbf{EndNode} is where the user can send and receive messages. The user
-is able to choose another \textbf{EndNode} to send the message to. The message
+The \textbf{End-Node} is where the user can send and receive messages. The user
+is able to choose another \textbf{End-Node} to send the message to. The message
 it takes in is of type string and is encapsulated in a payload packet. This
 payload packet is sent to a \textbf{Switch} which is then forwarded to another
-\textbf{Switch} or to the destination \textbf{EndNode}. When an \textbf{EndNode}
+\textbf{Switch} or to the destination \textbf{End-Node}. When an \textbf{End-Node}
 receives a payload packet, the message is printed out to the terminal.
 
-The \textbf{EndNode} implements a command system. This command system contains
+The \textbf{End-Node} implements a command system. This command system contains
 the commands ``help'', ``clear'' and ``message send
 \textless`message'\textgreater
 \textless{}destin-\newline{}ation\textgreater{}''. The ``help'' command is used
 to display all the commands available. The ``clear'' command is used to clear the
 terminal screen and the ``message send'' command is used to send a string
-message to the destination \textbf{EndNode}.
+message to the destination \textbf{End-Node}.
 
 \subsubsection{Node}
 This class is an abstract class which all of the \textbf{Node} classes inherit.
