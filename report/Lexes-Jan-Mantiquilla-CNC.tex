@@ -256,10 +256,40 @@ of being a single word.
 
 \section{Advantages and Disadvantages}
 \subsection{Advantages}
-
+\begin{itemize}
+  \item{Implements Link State Routing thus allowing any valid switch and
+    endpoint connection combinations to be used.}
+  \item{Does not allow the use of multiple \textbf{Controllers}.}
+  \item{It is asynchronous due to the use of threads.}
+  \item{The implementation is abstracted well using Java's object orientated
+    nature and the use of classes.}
+\end{itemize}
 \subsection{Disadvantages}
+\begin{itemize}
+  \item{Does not deal with invalid or unconnected graphs.}
+  \item{Is not an accurate implementation of the OpenFlow specification.}
+  \item{Does not implement acknowledgements.}
+  \item{Command system may be confusing to the user.}
+  \item{Certain network configurations may cause the path to be calculated
+    multiple times.}
+\end{itemize}
 
 \section{Program Usage}
+The following are some instructions to run the project:
+\begin{itemize}
+  \item{This program was built around the use of Docker.}
+  \item{To run the program, the bash script ``start\_sample\_route.sh'',
+    ``start\_sam-\\ple\_route2.sh'' or the ``start\_straight\_line.sh'' may be
+  used.}
+  \item{The script must be run with root due to the nature of Docker and it's
+    permissions required to run.}
+  \item{The script ``start\_sample\_route2.sh'' may take an integer parameter
+    to indicate the number of switches between the endpoints e.g. ``sudo
+  start\_sam-\\ple\_route2.sh 3'' to have three switches between the endpoints.}
+\end{itemize}
+
+The program has only been tested on a Linux system and is not guaranteed to run
+on a Windows or Mac machine.
 
 \section{Reflection}
 
