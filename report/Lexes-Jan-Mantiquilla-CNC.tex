@@ -78,12 +78,35 @@ caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
 \section{Introduction}
 
 \subsection{Problem Statement}
+In this assignment we are tasked to design a protocol which implements our own
+version of the OpenFlow software defined networking standard. We are tasked to
+create a protocol consisting of \textbf{EndNodes}, \textbf{Switches} and a
+\textbf{Controller} in which the \textbf{EndNodes} can send messages between
+each other. However we must emulate the OpenFlow standard which means that we
+mush send the payload packet to a switch which will then forward the packet to
+another \textbf{Switch} until the \textbf{Switch} forwards it to the destination
+\textbf{EndNode}.
 
 \subsection{Approach}
+Using my knowledge from the previous assignment, I was able to immediately
+setup the skeleton code for many classes that I believed I would need.
+
+When designing the packets, I used the website
+\href{http://flowgrammable.org/sdn/openflow/message-layer/}{flowgrammable.org}
+for inspiration and helped me greatly to understand how the OpenFlow standard
+is actually implemented. I also researched on various websites on the OpenFlow
+standard to help me understand and grasp the general concept of software defined
+networks.
+
+When designing the protocol, I attempted to implement what I understood about
+the OpenFlow standard. Upon finishing the basic implementation, I then
+researched about graphs and graph path finding algorithms, specifically
+Dijkstra's algorithm.
 
 \section{Overall Design}
-
-\subsection{Problem Statement}
+This section contains the features implemented, my understanding of the
+OpenFlow standard and the protocol I have decided to implement to solve the
+problem statement.
 
 \subsection{Features}
 
