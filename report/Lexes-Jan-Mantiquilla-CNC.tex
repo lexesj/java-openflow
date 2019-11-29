@@ -322,12 +322,20 @@ provided to us in the Advanced sample code. I have created other packet classes
 which implement the PacketContent abstract class.
 
 \subsubsection{FeatureRequestPacketContent}
+\includescalefigure{featurerequest}{featurerequest}{This figure is a feature
+wireshark capture of a feature request packet. The code for a feature request
+packet is 105 that is 0x69.}{1}{FeatureRequestPacket.png}
+
 This class is used to create a packet which represents a feature request
 packet. The feature request packet is sent by the \textbf{Controller} to a
 switch upon receiving a Hello packet. The feature request packet does not
 contain any data and only contains its type.
 
 \subsubsection{FeatureResultPacketContent}
+\includescalefigure{featureresult}{featureresult}{This figure is a feature
+wireshark capture of a feature result packet. The code for a feature request
+packet is 106 that is 0x6A.}{1}{FeatureResultPacket.png}
+
 This class is used to create a packet which represents a feature result packet.
 The feature result packet is sent by the \textbf{Switch} to the
 \textbf{Controller} in response to a feature request packet from the
@@ -340,6 +348,10 @@ connections. The switch connections are used when calculating the path to the
 specified destination.
 
 \subsubsection{FlowModPacketContent}
+\includescalefigure{flowmodpacket}{flowmodpacket}{This figure is the wireshark
+capture of a flow mod packet sent by a \textbf{Controller}. The code for a
+flow mod packet is 103 that is 0x67.}{1}{FlowModPacket.png}
+
 This class is used to create a packet which represents a flow mod packet. The
 flow mod packet is sent by the \textbf{Controller} to a \textbf{Switch}. The
 flow mod packet is used to change a \textbf{Switch's} flow table. The flow mod
@@ -348,6 +360,10 @@ flow mod packet, the \textbf{Switch} update it's flow table with the destination
 as the key and the next hop as the value.
 
 \subsubsection{HelloPacketContent}
+\includescalefigure{hellopacket}{hellopacket}{This figure is the wireshark
+capture of a hello packet sent by a \textbf{Switch}. The code for a hello
+packet is 100 that is 0x64.}{1}{HelloPacket.png}
+
 This class is used to create a packet which represents a hello packet. The hello
 packet is sent by both the \textbf{Switch} and \textbf{Controller}. The hello
 packet contains the version number. When receiving a hello packet, the lower
@@ -359,6 +375,10 @@ is set to 1. In my version of OpenFlow, the hello packet is sent first by the
 hello packet should be asynchronous.
 
 \subsubsection{PacketInPacketContent}
+\includescalefigure{packetinpacket}{packetinpacket}{This figure is the
+wireshark capture of a packet in packet sent by a \textbf{Switch}. The code for
+a packet in packet is 102 that is 0x66.}{1}{PacketInPacket.png}
+
 This class is used to create a packet which represents a packet in packet. The
 packet in packet is sent by the \textbf{Switch} to the \textbf{Controller}.
 This packet is used to ask the \textbf{Controller} for a flow mod packet. This
@@ -368,6 +388,10 @@ destination of the packet and the switch name. The destination and the switch
 name are both keys in the \textbf{Controller's} flow tables.
 
 \subsubsection{PayloadPacketContent}
+\includescalefigure{payloadpacket}{payloadpacket}{This figure is the wireshark
+capture of a payload packet sent by a \textbf{Switch}. The code for a payload
+packet is 101 that is 0x65.}{1}{PayloadPacket.png}
+
 This class is used to create a packet which represents a payload packet. The
 payload packet contains the payload i.e. the string containing the message and
 final destination of the packet. This packet is sent by the \textbf{End-Nodes}
