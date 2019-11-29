@@ -7,6 +7,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage[square,numbers]{natbib}
+\usepackage{tikz}
 
 %%------------------------------------------------
 %% Image and Listing code
@@ -211,6 +212,102 @@ is used in initialisation of the switches and to set the version number.
 \section{Implementation}
 This section contains an explanation of the implementation. It will describe how
 each of the classes used implement the design described above.
+
+\begin{tikzpicture}
+  \tikzstyle{node} = [circle, draw=black]
+  \tikzstyle{controller} = [minimum size = 1cm, draw=black]
+  \tikzstyle{straight} = [-]
+  \tikzstyle{dotted} = [-, style=dashed]
+
+  \node[controller] (c1) at (9,0) {C\textsubscript{1}};
+  \node[node] (r1) at (3,0) {R\textsubscript{1}};
+  \node[node] (r2) at (2.5,-2) {R\textsubscript{2}};
+  \node[node] (r3) at (5,-0.5) {R\textsubscript{3}};
+  \node[node] (r4) at (4.5,-2) {R\textsubscript{4}};
+  \node[node] (r5) at (3,-4) {R\textsubscript{5}};
+  \node[node] (r6) at (6.5,-2) {R\textsubscript{6}};
+  \node[node] (r7) at (5,-4.5) {R\textsubscript{7}};
+  \node[node] (r8) at (7,-4) {R\textsubscript{8}};
+  \node[node, label = {left:Alice}] (e1) at (1,0) {E\textsubscript{1}};
+  \node[node, label = {right:Bob}] (e2) at (9,-3.5) {E\textsubscript{2}};
+
+  \draw[dotted] (c1) -- (r1);
+  \draw[dotted] (c1) -- (r2);
+  \draw[dotted] (c1) -- (r3);
+  \draw[dotted] (c1) -- (r4);
+  \draw[dotted] (c1) -- (r5);
+  \draw[dotted] (c1) -- (r6);
+  \draw[dotted] (c1) -- (r7);
+  \draw[dotted] (c1) -- (r8);
+
+  \draw[straight] (r1) -- (r2);
+  \draw[straight] (r1) -- (r3);
+  \draw[straight] (r1) -- (r4);
+  \draw[straight] (r2) -- (r5);
+  \draw[straight] (r3) -- (r6);
+  \draw[straight] (r4) -- (r6);
+  \draw[straight] (r4) -- (r7);
+  \draw[straight] (r5) -- (r7);
+  \draw[straight] (r6) -- (r8);
+  \draw[straight] (r7) -- (r8);
+
+  \draw[straight] (e1) -- (r1);
+  \draw[straight] (e2) -- (r8);
+\end{tikzpicture}
+\begin{figure}[H]
+  \caption[graph 1 explanation]{The figure shows shows the topology implemented
+  by the ``start\_sample\_route.sh''}
+  \label{graph explanation}
+\end{figure}
+
+\begin{tikzpicture}
+  \tikzstyle{node} = [circle, draw=black]
+  \tikzstyle{controller} = [minimum size = 1cm, draw=black]
+  \tikzstyle{straight} = [-]
+  \tikzstyle{dotted} = [-, style=dashed]
+
+  \node[controller] (c1) at (9,0) {C\textsubscript{1}};
+  \node[node] (r1) at (3,0) {R\textsubscript{1}};
+  \node[node] (r2) at (2.5,-2) {R\textsubscript{2}};
+  \node[node] (r3) at (5,-0.5) {R\textsubscript{3}};
+  \node[node] (r4) at (4.5,-2) {R\textsubscript{4}};
+  \node[node] (r5) at (3,-4) {R\textsubscript{5}};
+  \node[node] (r6) at (6.5,-2) {R\textsubscript{6}};
+  \node[node] (r7) at (5,-4.5) {R\textsubscript{7}};
+  \node[node] (r8) at (7,-4) {R\textsubscript{8}};
+  \node[node, label = {left:Alice}] (e1) at (1,0) {E\textsubscript{1}};
+  \node[node, label = {right:Bob}] (e2) at (9,-3.5) {E\textsubscript{2}};
+  \node[node, label = {left:Ciaran}] (e3) at (1,-4) {E\textsubscript{3}};
+
+  \draw[dotted] (c1) -- (r1);
+  \draw[dotted] (c1) -- (r2);
+  \draw[dotted] (c1) -- (r3);
+  \draw[dotted] (c1) -- (r4);
+  \draw[dotted] (c1) -- (r5);
+  \draw[dotted] (c1) -- (r6);
+  \draw[dotted] (c1) -- (r7);
+  \draw[dotted] (c1) -- (r8);
+
+  \draw[straight] (r1) -- (r2);
+  \draw[straight] (r1) -- (r3);
+  \draw[straight] (r1) -- (r4);
+  \draw[straight] (r2) -- (r5);
+  \draw[straight] (r3) -- (r6);
+  \draw[straight] (r4) -- (r6);
+  \draw[straight] (r4) -- (r7);
+  \draw[straight] (r5) -- (r7);
+  \draw[straight] (r6) -- (r8);
+  \draw[straight] (r7) -- (r8);
+
+  \draw[straight] (e1) -- (r1);
+  \draw[straight] (e2) -- (r8);
+  \draw[straight] (e3) -- (r5);
+\end{tikzpicture}
+\begin{figure}[H]
+  \caption[graph 2 explanation]{The figure shows shows the topology implemented
+  by the ``start\_sample\_route2.sh''}
+  \label{graph 2 explanation}
+\end{figure}
 
 \subsection{Packet Classes}
 The packet classes are encoded using the method ObejectInputStream and
@@ -424,9 +521,9 @@ The following are some instructions to run the project:
   used.}
   \item{The script must be run with root due to the nature of Docker and it's
     permissions required to run.}
-  \item{The script ``start\_sample\_route2.sh'' may take an integer parameter
+  \item{The script ``start\_straight\_line.sh'' may take an integer parameter
     to indicate the number of switches between the endpoints e.g. ``sudo
-  start\_sam-\\ple\_route2.sh 3'' to have three switches between the endpoints.}
+  start\_sta-\\ight\_line.sh 3'' to have three switches between the endpoints.}
 \end{itemize}
 
 The program has only been tested on a Linux system and is not guaranteed to run
