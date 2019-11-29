@@ -374,6 +374,7 @@ of being a single word.
 \begin{itemize}
   \item{Implements Link State Routing thus allowing any valid switch and
     endpoint connection combinations to be used.}
+  \item{Can add more routers to the network on the fly.}
   \item{Does not allow the use of multiple \textbf{Controllers}.}
   \item{It is asynchronous due to the use of threads.}
   \item{The implementation is abstracted well using Java's object orientated
@@ -381,6 +382,7 @@ of being a single word.
 \end{itemize}
 \subsection{Disadvantages}
 \begin{itemize}
+  \item{Does not deal with dead routers.}
   \item{Does not deal with invalid or unconnected graphs.}
   \item{Is not an accurate implementation of the OpenFlow specification.}
   \item{Does not implement acknowledgements.}
