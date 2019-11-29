@@ -143,8 +143,55 @@ features that I have implemented are the following:
 \end{itemize}
 
 \subsection{OpenFlow}
+A software defined network is an approach to network management that allows one
+to program network configurations and abstract away the control plane from the
+date plane. This means that the data moving specifications will still function
+as before with but there would be the ability to control and program the all the
+network devices from a central control unit.
+
+OpenFlow is a software defined network standard which has three basic components
+in the network. The \textbf{Switch}, the \textbf{Controller} and the
+\textbf{End-Node}.
+
+The \textbf{Controller} is the node which does most of the work. The
+\textbf{Controller} is connected to all the \textbf{Switches}. When a
+\textbf{Switch} does not know where to forward the incoming packet i.e. a table
+miss occurred, the switch sends a packet in packet to the \textbf{Controller}.
+The \textbf{Controller} is able to program the \textbf{Switches}. In OpenFlow,
+there are many functions that the \textbf{Controller} may perform such as
+add and delete entries in the \textbf{Switch's} flow table. Such a packet to
+change the \textbf{Switch's} flow table is called a flow mod packet. Both the
+\textbf{Controller} and the \textbf{Switch} may send hello packets to each other
+signalling their online status.
+
+The \textbf{Controller} may also ask the \textbf{Switches} for their
+capabilities. The \textbf{Controller} sends a feature request packet to do so,
+to which the \textbf{Switch} will reply with a feature result packet.
+
+The \textbf{Switches} do not have much to do. They simple keep a flow table of
+all the routes to forward any incoming packets. They have the ability to request
+the \textbf{Controller} for the incoming packet's next hop if they do not have
+the entry in their flow table. In Link State Routing, the \textbf{Switches} also
+have the ability to send information about their neighbours.
+
+The \textbf{End-Nodes} have two basic functions, to send a message to a
+\textbf{Switch} which will then be forwarded to the desired \textbf{End-Node} or
+print out the message which has been sent by another \textbf{End-Node}.
 
 \subsection{Design of the Protocol}
+In my implementation of OpenFlow, I have attempted to implement the standard.
+However there are many changes or missing features as implementing OpenFlow in
+its entirety would be huge task and is very difficult to complete by myself.
+
+The design of the protocol's nodes is similar to the description of my
+understanding of OpenFlow as described above. However, the \textbf{Controllers}
+are unable to remove flow table entries from the \textbf{Switches}.
+
+The protocol uses Link State Routing to create find the path to the destination
+specified. Link State Routing uses Dijkstra's algorithm to find the shortest
+path to the destination, using the latency between nodes as the weights of the
+graph. However, I found it difficult to measure the latency between the nodes
+using Docker and thus used breadth first search as the path finding algorithm.
 
 \subsection{Packet Descriptions}
 There are many types of packets which I have created and is use when
@@ -301,7 +348,7 @@ All of the nodes are stored in the graph's hash table. The key of the hash
 table is a string which is the name of the node. The value of the hash table is
 the reference to the node which has that name.
 
-I found it difficult to measure the latency between the connections in docker
+I found it difficult to measure the latency between the connections in Docker
 and thus was unable to obtain the weights of the edges in the graph. I used a
 breadth first search algorithm instead of Dijkstra's algorithm for this reason.
 
