@@ -14,7 +14,7 @@ My implementation of the OpenFlow protocol in Java. This program simulates OpenF
   ### Running Examples
   1. Clone the repo
      ```
-     git clone https://github.com/lexesjan/processing-tcd-news.git
+     git clone https://github.com/lexesjan/java-openflow.git
      ```
   2. Run any of the following examples
      - start_sample_route.sh
